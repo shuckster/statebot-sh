@@ -223,15 +223,15 @@ perform_transitions () {
   # represents a state-transition.
   case $1 in
     'idle->pending')
-      ON="start";
-      THEN="statebot_emit okay persist";
+      ON="start"
+      THEN="statebot_emit okay persist"
     ;;
     'pending->resolved')
-      ON="okay";
-      THEN="statebot_emit done";
+      ON="okay"
+      THEN="statebot_emit done"
     ;;
     'rejected->idle'|'resolved->idle')
-      ON="done";
+      ON="done"
     ;;
   esac
 
@@ -266,10 +266,10 @@ on_transitions () {
   # represents the state-transition that just happened.
   case $1 in
     'idle->pending')
-      THEN="echo hey"
+      THEN="echo Hello, World!"
     ;;
     'rejected->idle'|'resolved->idle')
-      THEN="all_finished";
+      THEN="all_finished"
     ;;
   esac
 
@@ -326,8 +326,8 @@ perform_transitions () {
   case $1 in
     # Handle your "simple" transitions first:
     'idle->pending')
-      ON="start";
-      THEN="statebot_emit okay";
+      ON="start"
+      THEN="statebot_emit okay"
     ;;
 
     *)
@@ -338,7 +338,7 @@ perform_transitions () {
         rejected | resolved -> idle
       '
       if [[ $? -eq 1 ]]; then
-        ON="done";
+        ON="done"
       fi
     ;;
   esac
