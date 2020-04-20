@@ -300,12 +300,12 @@ To emulate this in Statebot-sh, the function `case_statebot` is offered:
 
 ```sh
 on_transitions () {
-  local THEN
+  local THEN=""
 
   case_statebot $1 '
     resolved | rejected -> done
   '
-  if [[ $? -eq 0 ]]; then
+  if [[ $? -eq 1 ]]; then
     THEN="echo 'All finished'"
   fi
 
