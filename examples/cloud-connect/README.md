@@ -2,7 +2,7 @@
 
 This is a shell-script that helps automate connecting to public wifi hotspots that sit behind a captive-portal (ie; the ones where you need an account.)
 
-It needs `plugins` to work. Two are bundled: An example that demonstrates how to write a plugin, and another that works with `BTWifi-with-FON` hotspots (so long as you have a valid and active account! :)
+It works using `plugins/`, and two are bundled: An example that demonstrates how to write a plugin, and another that works with `BTWifi-with-FON` hotspots (so long as you have a valid and active account! :)
 
 ## Installation
 
@@ -10,7 +10,7 @@ To use it, just pop it in your `crontab`...
 
 ```sh
 # Every 10th minute, check the connection using the bt-fon plugin
-*/10 * * * * /root/statebot/examples/cloud-connect/cloud-connect.sh bt-fon check
+*/10 * * * * ~/.../cloud-connect.sh bt-fon check
 ```
 
 ...and maybe your `hotplug.d/iface` folder, too:
@@ -19,7 +19,7 @@ To use it, just pop it in your `crontab`...
 #!/bin/sh
 export DEVICE
 export ACTION
-/root/statebot/examples/cloud-connect/hotplug.sh
+~/.../cloud-connect/hotplug.sh
 ```
 
 ## Usage
@@ -71,22 +71,22 @@ Here's what a plugin looks like:
 
 is_valid_network () {
   log "Are we on the right network to do this?"
-  return 0 # 1 = nope!
+  return 0 # 1 = Nope! Don't do anything
 }
 
 is_logged_in () {
   # Just ping Google for this demo...
   ping -t 3 google.com
-  return $? # 1 = error
+  return $? # Non-zero here means an error occurred
 }
 
 login () {
   sleep 3
-  return 0 # 1 = error
+  return 0 # Non-zero here means an error occurred
 }
 
 is_reboot_allowed () {
-  return 0 # 1 = allow
+  return 0 # Here, 1 means "allow reboot"
 }
 
 report_online_status () {
