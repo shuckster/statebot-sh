@@ -4,6 +4,8 @@ This is a shell-script that helps automate connecting to public wifi hotspots th
 
 It needs `plugins` to work. Two are bundled: An example that demonstrates how to write a plugin, and another that works with `BTWifi-with-FON` hotspots (so long as you have a valid and active account! :)
 
+## Installation
+
 To use it, just pop it in your `crontab`...
 
 ```sh
@@ -19,6 +21,8 @@ export DEVICE
 export ACTION
 /root/statebot/examples/cloud-connect/hotplug.sh
 ```
+
+## Usage
 
 Check the status of it like this:
 
@@ -51,6 +55,8 @@ INFO: <eId:1> Handling event: pause, from state [online]
 INFO: <eId:1> Changing state: online->paused
 INFO: <eId:1> No on_transitions() function: Skipping transition handlers
 ```
+
+## Plugins
 
 Here's what a plugin looks like:
 
@@ -87,6 +93,8 @@ report_online_status () {
   echo "Maybe POST to a URL so you can graph your connection-status!"
 }
 ```
+
+Have a look in `plugins/` to see this example and one that works for BT Fon, too.
 
 **Cloud Connect** implements [Statebot-sh](https://github.com/shuckster/statebot-sh/):
 
