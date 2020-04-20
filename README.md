@@ -1,4 +1,4 @@
-# Statebot
+# Statebot-sh
 
 <img src="./logo-full.png" width="255" />
 
