@@ -6,20 +6,22 @@ It works using `plugins/`, and two are bundled: An example that demonstrates how
 
 ## Installation
 
-To use it, just pop it in your `crontab`...
+Cloud Connect is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh) to get it.
+
+Then just pop Cloud Connect into your `crontab`...
 
 ```sh
 # Every 10th minute, check the connection using the bt-fon plugin
-*/10 * * * * ~/.../cloud-connect.sh bt-fon check
+*/10 * * * * ~/Downloads/statebot/examples/cloud-connect.sh bt-fon check
 ```
 
-...and maybe your `hotplug.d/iface` folder, too:
+...and maybe your `hotplug.d/iface/` folder, too:
 
 ```sh
 #!/bin/sh
 export DEVICE
 export ACTION
-~/.../cloud-connect/hotplug.sh
+~/Downloads/statebot/examples/cloud-connect/hotplug.sh
 ```
 
 ## Usage
