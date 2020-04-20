@@ -5,6 +5,7 @@ FAILURE_LIMIT=20
 let FAILURE_COUNT=0
 
 CLOUD_CONNECT_CHART='
+
   idle ->
 
   pinging ->
@@ -16,14 +17,13 @@ CLOUD_CONNECT_CHART='
 
   failure -> offline
 
-  // Go directly to [offline] on Hotplug "ifdown".
-  // Check out the hotplug.sh file!
+  // Go directly to [offline] on Hotplug "ifdown"
   online -> offline
 
   // Pause/resume functionality.
-  // Usage: ./cloud-connect plugin pause/resume
   (idle|pinging|online|offline|logging-in|failure) ->
     paused -> idle
+
 '
 
 #
@@ -53,8 +53,8 @@ echo "Loading plugin: $PLUGIN_API"
 source $PLUGIN_API
 
 # Check that the right functions are available
-REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
 VALID_PLUGIN=1
+REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
 for FN_NAME in ${REQUIRED_FUNCTIONS}; do
   type $FN_NAME 2>&1|grep -q 'function'
   if [[ $? -eq 1 ]]; then
@@ -92,7 +92,6 @@ fi
 
 perform_transitions () {
   local ON=""; local THEN=""
-
   case $1 in
     # check status
     'idle->pinging'|'offline->pinging'|'online->pinging')
@@ -146,7 +145,6 @@ perform_transitions () {
     fi
     ;;
   esac
-
   echo $ON $THEN
 }
 
@@ -189,7 +187,6 @@ log_failure () {
   error "Could not login :("
   bump_fail_count_for_this_session
   try_a_reboot_if_necessary
-
   statebot_emit disconnected
 }
 
@@ -197,19 +194,19 @@ log_failure () {
 # FAILURE COUNT HELPERS
 #
 
-load_fail_count_for_this_session() {
+load_fail_count_for_this_session () {
   if [ -f "$CLOUD_CONNECT_ERRORS" ]; then
     let FAILURE_COUNT=$(cat $CLOUD_CONNECT_ERRORS)
   fi
 }
 
-bump_fail_count_for_this_session() {
+bump_fail_count_for_this_session () {
   let FAILURE_COUNT+=1
   echo $FAILURE_COUNT > "$CLOUD_CONNECT_ERRORS"
   warn "Failure count: $FAILURE_COUNT"
 }
 
-unbump_fail_count_for_this_session() {
+unbump_fail_count_for_this_session () {
   let FAILURE_COUNT-=1
   if [ $FAILURE_COUNT -lt 0 ]; then
     let FAILURE_COUNT=0
@@ -218,7 +215,7 @@ unbump_fail_count_for_this_session() {
   log "Failure count: $FAILURE_COUNT"
 }
 
-have_we_failed_enough_to_try_a_reboot() {
+have_we_failed_enough_to_try_a_reboot () {
   if [ $FAILURE_COUNT -ge $FAILURE_LIMIT ]; then
     return 1
   else
@@ -226,7 +223,7 @@ have_we_failed_enough_to_try_a_reboot() {
   fi
 }
 
-try_a_reboot_if_necessary() {
+try_a_reboot_if_necessary () {
   have_we_failed_enough_to_try_a_reboot
   if [ $? -eq 1 ]; then
     warn "Failure limit reached! Are we allowed to try a reboot?"
