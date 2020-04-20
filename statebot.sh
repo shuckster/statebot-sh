@@ -41,15 +41,15 @@ A basic implementation:
 
     case $1 in
       "idle->pending")
-        ON="start";
-        THEN="statebot_emit okay persist";
+        ON="start"
+        THEN="statebot_emit okay persist"
       ;;
       "pending->resolved")
-        ON="okay";
-        THEN="statebot_emit done";
+        ON="okay"
+        THEN="statebot_emit done"
       ;;
       "rejected->idle"|"resolved->idle")
-        ON="done";
+        ON="done"
       ;;
     esac
 
@@ -65,7 +65,7 @@ A basic implementation:
         THEN="echo Hello, World!"
       ;;
       "rejected->idle"|"resolved->idle")
-        THEN="all_finished";
+        THEN="all_finished"
       ;;
     esac
 
@@ -850,8 +850,8 @@ statebot_states_available_from_here() {
 #   case $1 in
 #     # Handle your "simple" transitions first:
 #     "idle->pending")
-#       ON="start";
-#       THEN="statebot_emit okay";
+#       ON="start"
+#       THEN="statebot_emit okay"
 #     ;;
 #     *)
 #       # Now in the wildcard section, use
@@ -861,7 +861,7 @@ statebot_states_available_from_here() {
 #         rejected | resolved -> idle
 #       "
 #       if [[ $? -eq 1 ]]; then
-#         ON="done";
+#         ON="done"
 #       fi
 #     ;;
 #   esac

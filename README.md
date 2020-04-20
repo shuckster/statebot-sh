@@ -60,15 +60,15 @@ perform_transitions () {
 
   case $1 in
     'idle->pending')
-      ON="start";
-      THEN="statebot_emit okay persist";
+      ON="start"
+      THEN="statebot_emit okay persist"
     ;;
     'pending->resolved')
-      ON="okay";
-      THEN="statebot_emit done";
+      ON="okay"
+      THEN="statebot_emit done"
     ;;
     'rejected->idle'|'resolved->idle')
-      ON="done";
+      ON="done"
     ;;
   esac
 
@@ -84,7 +84,7 @@ on_transitions () {
       THEN="echo Hello, World!"
     ;;
     'rejected->idle'|'resolved->idle')
-      THEN="all_finished";
+      THEN="all_finished"
     ;;
   esac
 
