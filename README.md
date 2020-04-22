@@ -1,6 +1,6 @@
 # Statebot-sh
 
-<img src="./logo-full.png" width="255" />
+<img src="./sh-logo-full.png" width="300" />
 
 Write more robust and understandable programs.
 
