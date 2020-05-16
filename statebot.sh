@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 __STATEBOT_INFO__=':
 |
