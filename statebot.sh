@@ -2,7 +2,7 @@
 
 __STATEBOT_INFO__=':
 |
-| STATEBOT-SH 1.0.0
+| STATEBOT-SH 1.0.1
 | - Write more robust and understandable programs.
 |
 | Github repo w/ example usage:
