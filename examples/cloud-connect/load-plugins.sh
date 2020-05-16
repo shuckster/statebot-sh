@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Get the plugins available
 cd "${0%/*}"

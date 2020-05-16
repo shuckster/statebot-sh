@@ -39,7 +39,7 @@ chmod +x statebot.sh
 ## A small example:
 
 ```sh
-#!/bin/sh
+#!/bin/bash
 STATEBOT_LOG_LEVEL=4
 # 0 for silence, 4 for everything
 

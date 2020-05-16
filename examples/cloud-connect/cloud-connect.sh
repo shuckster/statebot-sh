@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
 FAILURE_LIMIT=20

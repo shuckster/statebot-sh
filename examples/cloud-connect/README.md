@@ -18,7 +18,7 @@ Then just pop Cloud Connect into your `crontab`...
 ...and maybe your `hotplug.d/iface/` folder, too:
 
 ```sh
-#!/bin/sh
+#!/bin/bash
 export DEVICE
 export ACTION
 ~/Downloads/statebot/examples/cloud-connect/hotplug.sh
@@ -63,7 +63,7 @@ INFO: <eId:1> No on_transitions() function: Skipping transition handlers
 Here's what a plugin looks like:
 
 ```sh
-#!/bin/sh
+#!/bin/bash
 
 # At this point, PLUGIN_PATH is available for you to import
 # credentials and configuration from other files, if you like!

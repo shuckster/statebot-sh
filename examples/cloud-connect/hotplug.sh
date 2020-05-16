@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # To use this, add the following to a new file in /etc/hotplug.d/iface/
 #
-# #!/bin/sh
+# #!/bin/bash
 # export DEVICE
 # export ACTION
 # /path/to/this/file/hotplug.sh

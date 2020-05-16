@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 source $PLUGIN_PATH/.secrets
 source $PLUGIN_PATH/config.sh
