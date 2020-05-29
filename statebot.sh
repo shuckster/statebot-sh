@@ -296,7 +296,7 @@ decompose_chart () {
   local PARSED=$(echo "${RAW_LINES}" | awk '
     BEGIN {
       condensed_line_count = 0
-      rxLineContinations = "(->|\\|)$"
+      rxLineContinuations = "(->|\\|)$"
       rxDisallowedCharacters = "[^a-z0-9!@#$%^&*:_+=<>|~.\x2D]"
       decomposed_line_count = 0
     }
@@ -308,7 +308,7 @@ decompose_chart () {
       gsub(rxDisallowedCharacters, "", line_sanitised)
 
       if ( line_sanitised != "" ) {
-        if ( line_sanitised ~ rxLineContinations ) {
+        if ( line_sanitised ~ rxLineContinuations ) {
           condensed_line = condensed_line "" line_sanitised
         } else {
           condensed_line_count += 1
