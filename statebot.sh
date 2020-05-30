@@ -81,13 +81,15 @@ A basic implementation:
 
   statebot_init "demo" "idle" "start" "$PROMISE_CHART"
 
+  if [[ "$1" == "" ]]; then
+    exit
+  fi
+
   # For this demo, allow emitting events from the command-line:
-  if [[ "$1" != "" ]]; then
-    if [[ "$1" != "reset" ]]; then
-      statebot_emit "$1"
-    else
-      statebot_reset
-    fi
+  if [[ "$1" == "reset" ]]; then
+    statebot_reset
+  else
+    statebot_emit "$1"
   fi
 
 # Copy all this to a script and run it a few times

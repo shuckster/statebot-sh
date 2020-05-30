@@ -108,13 +108,15 @@ echo      "Current state: $CURRENT_STATE"
 echo     "Previous state: $PREVIOUS_STATE"
 echo "Last emitted event: $PREVIOUS_EVENT"
 
+if [[ "$1" == "" ]]; then
+  exit
+fi
+
 # Allow resetting & emitting-events from the command-line:
-if [[ "$1" != "" ]]; then
-  if [[ "$1" == "reset" ]]; then
-    statebot_reset
-  else
-    statebot_emit "$1"
-  fi
+if [[ "$1" == "reset" ]]; then
+  statebot_reset
+else
+  statebot_emit "$1"
 fi
 ```
 

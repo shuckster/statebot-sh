@@ -54,7 +54,7 @@ on_transitions () {
 all_finished() { echo "That was easy!"; }
 
 # Import Statebot
-cd "${0%/*}"; source ./statebot.sh
+cd "${0%/*}"; source ../../statebot.sh
 # (^- change the working-directory to where this script is)
 
 statebot_init "demo" "idle" "start" "$PROMISE_CHART"
@@ -67,11 +67,13 @@ echo      "Current state: $CURRENT_STATE"
 echo     "Previous state: $PREVIOUS_STATE"
 echo "Last emitted event: $PREVIOUS_EVENT"
 
+if [[ "$1" == "" ]]; then
+  exit
+fi
+
 # Allow resetting & emitting-events from the command-line:
-if [[ "$1" != "" ]]; then
-  if [[ "$1" == "reset" ]]; then
-    statebot_reset
-  else
-    statebot_emit "$1"
-  fi
+if [[ "$1" == "reset" ]]; then
+  statebot_reset
+else
+  statebot_emit "$1"
 fi
