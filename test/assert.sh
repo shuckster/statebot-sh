@@ -1,11 +1,14 @@
 #!/bin/bash
 
-NOCOLOUR="\033[0m"
-ORANGE="\033[0;33m"
-RED="\033[1;31m"
-GREEN="\033[1;32m"
-YELLOW="\033[1;33m"
-PURPLE='\033[1;35m'
+if [[ "$DISABLE_COLOUR" != "true" ]]
+then
+  NOCOLOUR="\033[0m"
+  ORANGE="\033[0;33m"
+  RED="\033[1;31m"
+  GREEN="\033[1;32m"
+  YELLOW="\033[1;33m"
+  PURPLE='\033[1;35m'
+fi
 
 PREFIX_OKAY="[ ${GREEN}>${NOCOLOUR} ]"
 PREFIX_FAIL="[ ${RED}x${NOCOLOUR} ]"
@@ -21,6 +24,9 @@ assert_eq()
     echo -e "$PREFIX_OKAY $3"
   else
     echo -e "$PREFIX_FAIL $3"
+    echo -e "      ${RED}- Expected: $2"
+    echo -e "      ${GREEN}+ Saw: $1"
+    echo -e "${NOCOLOUR}"
     ONE_ASSERTION_FAILED=1
   fi
 }
@@ -32,6 +38,7 @@ assert_ne()
     echo -e "$PREFIX_OKAY $3"
   else
     echo -e "$PREFIX_FAIL $3"
+    echo -e "      ${RED}- Expected: $1 to not be equal to $2"
     ONE_ASSERTION_FAILED=1
   fi
 }
@@ -41,11 +48,11 @@ assert_describe()
   if [[ "$ONE_ASSERTION_FAILED" == "0" ]]
   then
     echo -e "$PREFIX_ALL_OKAY $1"
-    echo ":"
+    echo ""
     return 0
   else
     echo -e "$PREFIX_ALL_FAIL $1"
-    echo ":"
+    echo ""
     return 1
   fi
 }
