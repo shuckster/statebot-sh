@@ -489,6 +489,8 @@ __statebot_bail () {
 # Handlers are defined inside a user-defined on_transitions() function.
 #
 __statebot_get_handler_for_transition () {
+  __STATEBOT_AFTER_TRANSITION__=""
+
   local TEST_TRANSITION="$1"
   local LAST_TRANSITION="$PREVIOUS_STATE->$CURRENT_STATE"
   if [[ "$TEST_TRANSITION" != "$LAST_TRANSITION" ]]; then
@@ -502,7 +504,6 @@ __statebot_get_handler_for_transition () {
     return 1
   fi
 
-  __STATEBOT_AFTER_TRANSITION__=""
   info "<eId> Handling transition: $LAST_TRANSITION"
 
   # Process user-defined on_transitions() ...
@@ -740,6 +741,7 @@ __statebot_emit () {
     # Handle on_transitions() THEN="..."
     if [[ "$__STATEBOT_AFTER_TRANSITION__" != "" ]]; then
       __statebot_then_stack_push "$__STATEBOT_AFTER_TRANSITION__"
+      __STATEBOT_AFTER_TRANSITION__=""
     fi
   fi
 
@@ -770,7 +772,15 @@ __statebot_enter () {
 
   local NEXT_STATE="$1"
   local STATE_CHANGED=0
-  for STATE in $(statebot_states_available_from_here); do
+
+  if [[ "$CURRENT_STATE" == "$NEXT_STATE" ]]
+  then
+    info "<eId> Not changing state, already in: $NEXT_STATE"
+    return 1
+  fi
+
+  for STATE in $(statebot_states_available_from_here)
+  do
     if [[ "$STATE" != "$NEXT_STATE" ]]; then
       continue
     fi
@@ -802,6 +812,7 @@ __statebot_enter () {
   # Handle on_transitions() THEN="..."
   if [[ "$__STATEBOT_AFTER_TRANSITION__" != "" ]]; then
     __statebot_then_stack_push "$__STATEBOT_AFTER_TRANSITION__"
+    __STATEBOT_AFTER_TRANSITION__=""
   fi
 
   if [[ $STATE_CHANGED -eq 1 ]]; then

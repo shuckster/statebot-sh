@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - statebot_reset updates CURRENT_STATE for cases where you want to
   continue execution after calling it. Previously it only updated
   the CSV database entry
+- statebot_enter won't fire THEN-callbacks if unnecessary
 - Linting tweaks via ShellCheck
 
 ### Changed
