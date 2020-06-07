@@ -29,6 +29,7 @@ on_transitions()
 }
 
 callback_count=0
+expected_callback_count=4
 
 entered_first() { ((callback_count+=1)); }
 entered_second() { ((callback_count+=1)); }
@@ -56,15 +57,15 @@ assert_eq "$CURRENT_STATE" "third" "second->third"
 
 statebot_enter "last"
 assert_eq "$CURRENT_STATE" "last" "third->last"
-assert_eq "$callback_count" "4" "THEN-callbacks should have run 4 times"
+assert_eq "$callback_count" "$expected_callback_count" "THEN-callbacks should have run $expected_callback_count times"
 
 statebot_enter "last"
-assert_eq "$callback_count" "4" "THEN-callbacks should still have run 4 times"
+assert_eq "$callback_count" "$expected_callback_count" "THEN-callbacks should still have run $expected_callback_count times"
 
 statebot_enter "first"
 assert_eq "$CURRENT_STATE" "last" "Tried to enter 'first', should stay on 'last'"
 assert_eq "$PREVIOUS_STATE" "third" "Previous state is still 'third'"
-assert_eq "$callback_count" "4" "THEN-callbacks should still really have only run 4 times"
+assert_eq "$callback_count" "$expected_callback_count" "THEN-callbacks should still really have only run $expected_callback_count times"
 
 assert_describe "Can enter directly into states with 'statebot_enter'"
 exit $?

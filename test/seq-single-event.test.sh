@@ -32,7 +32,30 @@ perform_transitions()
   echo "$ON" "$THEN"
 }
 
+on_transitions()
+{
+  local THEN=""
+
+  case $1 in
+    "idle->first")
+      THEN="entered_first"
+    ;;
+    "first->second")
+      THEN="entered_second"
+    ;;
+    "second->third")
+      THEN="entered_third"
+    ;;
+    "third->last")
+      THEN="entered_last"
+    ;;
+  esac
+
+  echo "$THEN"
+}
+
 callback_count=0
+expected_callback_count=8
 
 entered_first() { ((callback_count+=1)); }
 entered_second() { ((callback_count+=1)); }
@@ -60,11 +83,11 @@ assert_eq "$CURRENT_STATE" "third" "Next state is 'third'"
 
 statebot_emit "next"
 assert_eq "$CURRENT_STATE" "last" "Final state is 'last'"
-assert_eq "$callback_count" "4" "THEN-callbacks should have run 4 times"
+assert_eq "$callback_count" "$expected_callback_count" "THEN-callbacks should have run $expected_callback_count times"
 
 statebot_emit "next"
 assert_eq "$CURRENT_STATE" "last" "Final state is still 'last'"
-assert_eq "$callback_count" "4" "THEN-callbacks should still have run 4 times"
+assert_eq "$callback_count" "$expected_callback_count" "THEN-callbacks should still have run $expected_callback_count times"
 
 assert_describe "Can 'statebot_emit' a single common event to move through states"
 exit $?
