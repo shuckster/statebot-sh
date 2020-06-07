@@ -46,22 +46,25 @@ statebot_reset
 assert_eq "$CURRENT_STATE" "idle" "First state is 'idle'"
 
 statebot_enter "first"
-assert_eq "$CURRENT_STATE" "first" "->first"
+assert_eq "$CURRENT_STATE" "first" "idle->first"
 
 statebot_enter "second"
-assert_eq "$CURRENT_STATE" "second" "->second"
+assert_eq "$CURRENT_STATE" "second" "first->second"
 
 statebot_enter "third"
-assert_eq "$CURRENT_STATE" "third" "->third"
+assert_eq "$CURRENT_STATE" "third" "second->third"
 
 statebot_enter "last"
-assert_eq "$CURRENT_STATE" "last" "->last"
-assert_eq "$callback_count" "4" "Expected callbacks to have been run 4 times"
+assert_eq "$CURRENT_STATE" "last" "third->last"
+assert_eq "$callback_count" "4" "THEN-callbacks should have run 4 times"
+
+statebot_enter "last"
+assert_eq "$callback_count" "4" "THEN-callbacks should still have run 4 times"
 
 statebot_enter "first"
 assert_eq "$CURRENT_STATE" "last" "Tried to enter 'first', should stay on 'last'"
 assert_eq "$PREVIOUS_STATE" "third" "Previous state is still 'third'"
-assert_eq "$callback_count" "4" "Expected callbacks to have still only been run 4 times"
+assert_eq "$callback_count" "4" "THEN-callbacks should still really have only run 4 times"
 
 assert_describe "Can enter directly into states with 'statebot_enter'"
 exit $?

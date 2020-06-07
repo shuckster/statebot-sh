@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2016,SC2006,SC2001,SC2181
 
 __STATEBOT_INFO__=':
 |
@@ -182,12 +183,13 @@ __STATEBOT_INITIAL_EVENT__=""
 __STATEBOT_AFTER_EVENT__=""
 __STATEBOT_AFTER_TRANSITION__=""
 __STATEBOT_HANDLING_EVENT__=0
-let __STATEBOT_THEN_STACK_SIZE__=0
-let __STATEBOT_EVENT_COUNT=0
+__STATEBOT_THEN_STACK_SIZE__=0
+__STATEBOT_EVENT_COUNT=0
 
 # Command-line usage
-echo $0 | grep -q -e '/statebot\.sh$'
-if [[ $? -eq 0  ]]; then
+echo "$0" | grep -q -e '/statebot\.sh$'
+if [[ $? -eq 0  ]]
+then
   echo "$__STATEBOT_INFO__"
   if [[ "$1" != "--example" && "$1" != "--help" ]]; then
     echo "See an example with: ./statebot.sh --example"
@@ -245,6 +247,7 @@ fi
 #
 
 logit () {
+  # shellcheck disable=SC2124
   local MSG="$@"
 
   if [[ $__STATEBOT_HANDLING_EVENT__ -eq 1 ]]; then
@@ -262,6 +265,7 @@ logit () {
 }
 
 info () {
+  # shellcheck disable=SC2145
   [[ $__STATEBOT_LOG_LEVEL__ -ge 4 ]] && logit "INFO: ${@}"
 }
 
@@ -270,16 +274,19 @@ log () {
 }
 
 warn () {
+  # shellcheck disable=SC2145
   [[ $__STATEBOT_LOG_LEVEL__ -ge 2 ]] && logit "WARN: ${@}"
 }
 
 error () {
+  # shellcheck disable=SC2145
   [[ $__STATEBOT_LOG_LEVEL__ -ge 1 ]] && logit "ERR!: ${@}"
 }
 
 dump () {
   local RAW_LINES="$1"
   log "---"
+  # shellcheck disable=SC2066
   for NEXT in "${RAW_LINES}"; do
     log "$NEXT"
   done
@@ -295,7 +302,7 @@ dump () {
 #
 decompose_chart () {
   local RAW_LINES="$1"
-  local PARSED=$(echo "${RAW_LINES}" | awk '
+  local PARSED; PARSED=$(echo "${RAW_LINES}" | awk '
     BEGIN {
       condensed_line_count = 0
       rxLineContinuations = "(->|\\|)$"
@@ -388,7 +395,7 @@ decompose_chart () {
 #
 decompose_transitions () {
   local RAW_LINES="$1"
-  local PARSED=$(echo "${RAW_LINES}" | awk '
+  local PARSED; PARSED=$(echo "${RAW_LINES}" | awk '
     {
       len = split($0,states,"->");
       # Technique to remove duplicates and keep sort-order: 1/3
@@ -496,10 +503,10 @@ __statebot_get_handler_for_transition () {
   fi
 
   __STATEBOT_AFTER_TRANSITION__=""
-  info "<eId> Handling transition: $TRANSITION"
+  info "<eId> Handling transition: $LAST_TRANSITION"
 
   # Process user-defined on_transitions() ...
-  local THEN=$(on_transitions "$TRANSITION")
+  local THEN; THEN=$(on_transitions "$LAST_TRANSITION")
   if [[ "$THEN" != "" ]]; then
     __STATEBOT_AFTER_TRANSITION__="$THEN"
   fi
@@ -532,8 +539,8 @@ __statebot_change_state_for_event_and_get_handler () {
 
   # Process user-defined perform_transitions() ...
   for TRANSITION in $(__statebot_transitions_available_from_here); do
-    local ON_THEN=$(perform_transitions "$TRANSITION")
-    local ON=$(echo "$ON_THEN"|awk '{print $1}')
+    local ON_THEN; ON_THEN=$(perform_transitions "$TRANSITION")
+    local ON; ON=$(echo "$ON_THEN"|awk '{print $1}')
     if [[ "$PREVIOUS_EVENT" != "$ON" ]]; then
       continue
     fi
@@ -590,8 +597,8 @@ __statebot_info () {
 #
 statebot_inspect () {
   local CHART="$1"
-  local TRANSITIONS=$(decompose_chart "${CHART}")
-  local STATES=$(decompose_transitions "${TRANSITIONS}")
+  local TRANSITIONS; TRANSITIONS=$(decompose_chart "${CHART}")
+  local STATES; STATES=$(decompose_transitions "${TRANSITIONS}")
 
   log "Transitions:"
   dump "${TRANSITIONS}"
@@ -632,22 +639,23 @@ __statebot_init () {
   fi
 
   # Check for DB record, set initial values
-  grep -q "^$NAME," $__STATEBOT_DB__
+  grep -q "^$NAME," "$__STATEBOT_DB__"
   if [[ $? -eq 1 ]]; then
     info "No record of this machine, creating..."
-    echo "$NAME,$__STATEBOT_INITIAL_STATE__,$__STATEBOT_INITIAL_EVENT__" >> $__STATEBOT_DB__
+    echo "$NAME,$__STATEBOT_INITIAL_STATE__,$__STATEBOT_INITIAL_EVENT__" >> "$__STATEBOT_DB__"
   fi
 
   # Set current machine name/state/event
   STATEBOT_NAME=$NAME
-  CURRENT_STATE=$(grep "^$NAME," $__STATEBOT_DB__ | awk '
+  CURRENT_STATE=$(grep "^$NAME," "$__STATEBOT_DB__" | awk '
     BEGIN { FS="," } { print $2 }')
-  PREVIOUS_EVENT=$(grep "^$NAME," $__STATEBOT_DB__ | awk '
+  PREVIOUS_EVENT=$(grep "^$NAME," "$__STATEBOT_DB__" | awk '
     BEGIN { FS="," } { print $3 }')
   STATEBOT_CHART="$4"
 
   # Parse the chart
   STATEBOT_VALID_TRANSITIONS=$(decompose_chart "${STATEBOT_CHART}")
+  # shellcheck disable=SC2034
   STATEBOT_VALID_STATES=$(decompose_transitions "${STATEBOT_VALID_TRANSITIONS}")
 
   # We're initialised at this point
@@ -689,7 +697,7 @@ __statebot_emit () {
   __STATEBOT_AFTER_EVENT__=""
   __STATEBOT_AFTER_TRANSITION__=""
 
-  let __STATEBOT_EVENT_COUNT=__STATEBOT_EVENT_COUNT+1
+  let __STATEBOT_EVENT_COUNT+=1
   info "<eId> Handling event: $EMITTED_EVENT, from state [$CURRENT_STATE]"
 
   # Persist event for another run, or execute it immediately?
@@ -717,8 +725,9 @@ __statebot_emit () {
   local NAME="$STATEBOT_NAME"
   local STATE="$CURRENT_STATE"
   local EVENT="$PERSIST_EVENT"
-  local DB=$(cat $__STATEBOT_DB__ | sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/")
-  echo "$DB" > $__STATEBOT_DB__
+  local DB
+  DB=$(sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/" "$__STATEBOT_DB__")
+  echo "$DB" > "$__STATEBOT_DB__"
 
   if [[ $STATE_CHANGED -eq 1 ]]; then
     # Handle perform_transitions() THEN="..."
@@ -775,8 +784,9 @@ __statebot_enter () {
     local NAME="$STATEBOT_NAME"
     local STATE="$CURRENT_STATE"
     local EVENT=""
-    local DB=$(cat $__STATEBOT_DB__ | sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/")
-    echo "$DB" > $__STATEBOT_DB__
+    local DB
+    DB=$(sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/" "$__STATEBOT_DB__")
+    echo "$DB" > "$__STATEBOT_DB__"
 
     STATE_CHANGED=1
     break
@@ -819,7 +829,8 @@ statebot_reset () {
   local NAME="$STATEBOT_NAME"
   local STATE="$__STATEBOT_INITIAL_STATE__"
   local EVENT="$__STATEBOT_INITIAL_EVENT__"
-  local DB=$(cat $__STATEBOT_DB__ | sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/")
+  local DB
+  DB=$(sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/" "$__STATEBOT_DB__")
   echo "$DB" > "$__STATEBOT_DB__"
 
   PREVIOUS_STATE=""
@@ -833,7 +844,7 @@ statebot_reset () {
 #   AVAILABLE_STATES="$(statebot_states_available_from_here)"
 #
 statebot_states_available_from_here() {
-  local PARSED=$(__statebot_transitions_available_from_here | awk '
+  local PARSED; PARSED=$(__statebot_transitions_available_from_here | awk '
     BEGIN { FS="->" } { print $2 }
   ')
 
@@ -874,7 +885,8 @@ statebot_states_available_from_here() {
 # }
 case_statebot () {
   local MATCH="$1"
-  local TRANSITIONS=$(decompose_chart "$2")
+  local TRANSITIONS
+  TRANSITIONS=$(decompose_chart "$2")
   for TRANSITION in ${TRANSITIONS}; do
     if [[ "$TRANSITION" == "$MATCH" ]]; then
       return 1

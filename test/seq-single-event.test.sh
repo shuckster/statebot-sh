@@ -60,11 +60,11 @@ assert_eq "$CURRENT_STATE" "third" "Next state is 'third'"
 
 statebot_emit "next"
 assert_eq "$CURRENT_STATE" "last" "Final state is 'last'"
-assert_eq "$callback_count" "4" "Expected callbacks to have been run 4 times"
+assert_eq "$callback_count" "4" "THEN-callbacks should have run 4 times"
 
 statebot_emit "next"
 assert_eq "$CURRENT_STATE" "last" "Final state is still 'last'"
-assert_eq "$callback_count" "4" "Expected callbacks to have still only been run 4 times"
+assert_eq "$callback_count" "4" "THEN-callbacks should still have run 4 times"
 
 assert_describe "Can 'statebot_emit' a single common event to move through states"
 exit $?
