@@ -820,8 +820,11 @@ statebot_reset () {
   local STATE="$__STATEBOT_INITIAL_STATE__"
   local EVENT="$__STATEBOT_INITIAL_EVENT__"
   local DB=$(cat $__STATEBOT_DB__ | sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/")
+  echo "$DB" > "$__STATEBOT_DB__"
 
-  echo "$DB" > $__STATEBOT_DB__
+  PREVIOUS_STATE=""
+  CURRENT_STATE="$STATE"
+  PREVIOUS_EVENT="$EVENT"
 }
 
 #
