@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2219
 source ./assert.sh
 
 TEST_CHART='
@@ -57,10 +57,10 @@ on_transitions()
 callback_count=0
 expected_callback_count=8
 
-entered_first() { ((callback_count+=1)); }
-entered_second() { ((callback_count+=1)); }
-entered_third() { ((callback_count+=1)); }
-entered_last() { ((callback_count+=1)); }
+entered_first() { let callback_count+=1; }
+entered_second() { let callback_count+=1; }
+entered_third() { let callback_count+=1; }
+entered_last() { let callback_count+=1; }
 
 # Import Statebot and initialise it
 cd "${0%/*}" || exit 255

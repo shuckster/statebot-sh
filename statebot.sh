@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2016,SC2006,SC2001,SC2181
+# shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219
 
 __STATEBOT_INFO__=':
 |
