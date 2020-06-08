@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC2034,SC1091
+
 STATEBOT_LOG_LEVEL=4
 # 0 for silence, 4 for everything
 
@@ -14,7 +16,8 @@ PROMISE_CHART='
 '
 
 # Implement a "perform_transitions" function to act on events:
-perform_transitions () {
+perform_transitions ()
+{
   local ON=""; local THEN=""
 
   case $1 in
@@ -31,11 +34,12 @@ perform_transitions () {
     ;;
   esac
 
-  echo $ON $THEN
+  echo $ON "$THEN"
 }
 
 # Implement an "on_transitions" function to act on transitions:
-on_transitions () {
+on_transitions ()
+{
   local THEN=""
 
   case $1 in
@@ -54,7 +58,8 @@ on_transitions () {
 all_finished() { echo "That was easy!"; }
 
 # Import Statebot
-cd "${0%/*}"; source ../../statebot.sh
+cd "${0%/*}" || exit 255
+source ../../statebot.sh
 # (^- change the working-directory to where this script is)
 
 statebot_init "demo" "idle" "start" "$PROMISE_CHART"
