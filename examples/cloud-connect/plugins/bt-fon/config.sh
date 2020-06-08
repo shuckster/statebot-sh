@@ -1,10 +1,12 @@
+#!/bin/bash
+# shellcheck disable=SC2034
 
 # Network
 FON_SSID="BTWifi-with-FON"
 FON_IFACE="apcli0"
 FON_COOKIES="/tmp/fon_cookies.txt"
 FON_PREVIOUS_ATTEMPT="/tmp/fon_previous_attempt.html"
-FON_REBOOT_LOG="~/fon_reboot_log.txt"
+FON_REBOOT_LOG="$HOME/fon_reboot_log.txt"
 
 # Current working URLs
 PORTAL_STATUS_URL="https://www.btwifi.com:8443/home"

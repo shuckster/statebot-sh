@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034
 
 if [[ "$DISABLE_COLOUR" != "true" ]]
 then

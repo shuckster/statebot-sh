@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2219,SC2034,SC1090,SC1091
 
 CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
 FAILURE_LIMIT=20
@@ -30,7 +31,7 @@ CLOUD_CONNECT_CHART='
 # PLUGINS
 #
 
-cd "${0%/*}";
+cd "${0%/*}" || exit 255
 PLUGIN_INFO=$(./load-plugins.sh "$@")
 PLUGIN_EXIT=$?
 PLUGIN_NAME=$(echo "$PLUGIN_INFO" | awk '{ print $1 }')
@@ -45,24 +46,26 @@ case $PLUGIN_EXIT in
     echo "Just one plugin, defaulting to it: [$PLUGIN_NAME]"
   ;;
   *)
-    echo $PLUGIN_INFO
+    echo "$PLUGIN_INFO"
     exit 1
   ;;
 esac
 echo "Loading plugin: $PLUGIN_API"
-source $PLUGIN_API
+source "$PLUGIN_API"
 
 # Check that the right functions are available
 VALID_PLUGIN=1
 REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
-for FN_NAME in ${REQUIRED_FUNCTIONS}; do
-  type $FN_NAME 2>&1|grep -q 'function'
-  if [[ $? -eq 1 ]]; then
+for FN_NAME in ${REQUIRED_FUNCTIONS}
+do
+  if ! type "$FN_NAME" 2>&1|grep -q 'function'
+  then
     echo "Plugin does not have a required function: $FN_NAME()"
     VALID_PLUGIN=0
   fi
 done
-if [[ $VALID_PLUGIN -eq 0 ]]; then
+if [[ $VALID_PLUGIN -eq 0 ]]
+then
   exit 1
 fi
 
@@ -78,11 +81,9 @@ source ../../statebot.sh
 # CHECK WE'RE ON A VALID NETWORK
 #
 
-is_valid_network
-if [ $? -ne 0 ]
+if ! is_valid_network
 then
   warn "is_valid_network() didn't pass, exiting..."
-  statebot_reset
   exit 1
 fi
 
@@ -90,8 +91,10 @@ fi
 # EVENTS
 #
 
-perform_transitions () {
+perform_transitions ()
+{
   local ON=""; local THEN=""
+
   case $1 in
     # check status
     'idle->pinging'|'offline->pinging'|'online->pinging')
@@ -136,7 +139,7 @@ perform_transitions () {
     ;;
     *)
     # pause
-    case_statebot $1 '
+    case_statebot "$1" '
       (idle|pinging|online|offline|logging-in|failure) ->
         paused
     '
@@ -145,6 +148,7 @@ perform_transitions () {
     fi
     ;;
   esac
+
   echo $ON $THEN
 }
 
@@ -152,19 +156,20 @@ perform_transitions () {
 # IMPLEMENTATION
 #
 
-check_connection () {
-  is_logged_in
-  if [ $? -eq 0 ]; then
+check_connection ()
+{
+  if is_logged_in
+  then
     statebot_emit connected
   else
     statebot_emit disconnected
   fi
 }
 
-attempt_login () {
+attempt_login ()
+{
   warn "Not logged-in, trying..."
-  login
-  if [ $? -eq 0 ];
+  if login
   then
     online_action
     statebot_emit connected
@@ -173,17 +178,20 @@ attempt_login () {
   fi
 }
 
-online_action () {
+online_action ()
+{
   log "Online!"
   unbump_fail_count_for_this_session
   report_online_status
 }
 
-offline_message () {
+offline_message ()
+{
   warn "OFFLINE!"
 }
 
-log_failure () {
+log_failure ()
+{
   error "Could not login :("
   bump_fail_count_for_this_session
   try_a_reboot_if_necessary
@@ -194,50 +202,59 @@ log_failure () {
 # FAILURE COUNT HELPERS
 #
 
-load_fail_count_for_this_session () {
-  if [ -f "$CLOUD_CONNECT_ERRORS" ]; then
+load_fail_count_for_this_session ()
+{
+  if [[ -f $CLOUD_CONNECT_ERRORS ]]
+  then
     let FAILURE_COUNT=$(cat $CLOUD_CONNECT_ERRORS)
   fi
 }
 
-bump_fail_count_for_this_session () {
+bump_fail_count_for_this_session ()
+{
   let FAILURE_COUNT+=1
-  echo $FAILURE_COUNT > "$CLOUD_CONNECT_ERRORS"
+  echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
   warn "Failure count: $FAILURE_COUNT"
 }
 
-unbump_fail_count_for_this_session () {
+unbump_fail_count_for_this_session ()
+{
   let FAILURE_COUNT-=1
-  if [ $FAILURE_COUNT -lt 0 ]; then
+  if [[ $FAILURE_COUNT -lt 0 ]]
+  then
     let FAILURE_COUNT=0
   fi
-  echo $FAILURE_COUNT > "$CLOUD_CONNECT_ERRORS"
+  echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
   log "Failure count: $FAILURE_COUNT"
 }
 
-have_we_failed_enough_to_try_a_reboot () {
-  if [ $FAILURE_COUNT -ge $FAILURE_LIMIT ]; then
-    return 1
-  else
+we_have_failed_enough_to_try_a_reboot ()
+{
+  if [[ $FAILURE_COUNT -ge $FAILURE_LIMIT ]]
+  then
     return 0
   fi
+  return 1
 }
 
-try_a_reboot_if_necessary () {
-  have_we_failed_enough_to_try_a_reboot
-  if [ $? -eq 1 ]; then
-    warn "Failure limit reached! Are we allowed to try a reboot?"
-
-    is_reboot_allowed
-    if [ $? -eq 1 ]; then
-      warn "Rebooting!"
-      reboot
-    else
-      log "Not rebooting!"
-    fi
-  else
+try_a_reboot_if_necessary ()
+{
+  if ! we_have_failed_enough_to_try_a_reboot
+  then
     log "Retry limit not yet reached..."
+    return 1
   fi
+
+  warn "Failure limit reached! Are we allowed to try a reboot?"
+
+  if ! is_reboot_allowed
+  then
+    log "Not rebooting!"
+    return 1
+  fi
+
+  warn "Rebooting!"
+  reboot
 }
 
 load_fail_count_for_this_session
@@ -250,6 +267,7 @@ load_fail_count_for_this_session
 statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
 
 # Emit events from the command-line
-if [[ "$EVENT" != "" ]]; then
+if [[ "$EVENT" != "" ]]
+then
   statebot_emit "$EVENT"
 fi
