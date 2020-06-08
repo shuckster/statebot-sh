@@ -121,9 +121,9 @@ Oh no!
 
 ## NPM specificity
 
-To determine the uniqueness of a failure the output is stripped of things that usually change between runs, such as timestamp and durations.
+To determine the uniqueness of a failure the output is stripped of things that usually change between runs, such as timestamps and durations.
 
-This "stripping" targets NPM specifically, so all lines prefixed with `npm ERR!` will be removed, and timing information in parentheses will be lopped-off the end of lines, so `3 passing (1m)` becomes `3 passing`.
+This "stripping" targets NPM specifically, so lines prefixed with `npm ERR!` will be removed, and timing information in parentheses will be lopped-off the end of lines. `3 passing (1m)` becomes `3 passing`, and so on.
 
 After this, the output is hashed using `md5sum`, and this hash is used to identify unique failures.
 
@@ -131,10 +131,8 @@ After this, the output is hashed using `md5sum`, and this hash is used to identi
 
 Rerun stores its output in `/tmp/rerun-failures.txt`. This file is copied into `history/` on subsequent runs. If a run is "paused" with CTRL+C, the current state of the run is stored in `/tmp/rerun-job.txt`
 
-**Rerun** implements [Statebot-sh](https://github.com/shuckster/statebot-sh/):
-
-<img src="../../logo-small.png" width="75" />
-
 ## License
 
-Rerun is bundled with Statebot-sh, and both are [ISC licensed](./LICENSE).
+Rerun is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+
+<img src="../../logo-small.png" width="75" />

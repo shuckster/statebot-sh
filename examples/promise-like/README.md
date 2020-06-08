@@ -14,8 +14,8 @@ A small demonstration of [Statebot-sh](https://github.com/shuckster/statebot-sh)
 
 Have a look at the source-code and run it a few times to see how it behaves. :)
 
-<img src="../../logo-small.png" width="75" />
-
 ## License
 
-Promise-like is bundled with Statebot-sh, and both are [ISC licensed](./LICENSE).
+Promise-like is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+
+<img src="../../logo-small.png" width="75" />

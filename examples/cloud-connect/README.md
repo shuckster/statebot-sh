@@ -115,10 +115,8 @@ report_online_status () {
 
 Have a look in `plugins/` to see this example and one that works for BT Fon, too.
 
-**Cloud Connect** implements [Statebot-sh](https://github.com/shuckster/statebot-sh/):
-
-<img src="../../logo-small.png" width="75" />
-
 ## License
 
-Cloud Connect is bundled with Statebot-sh, and both are [ISC licensed](./LICENSE).
+Cloud Connect is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+
+<img src="../../logo-small.png" width="75" />
