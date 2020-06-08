@@ -68,12 +68,12 @@ Here's what a plugin looks like:
 # At this point, PLUGIN_PATH is available for you to import
 # credentials and configuration from other files, if you like!
 
-# source $PLUGIN_PATH/.secrets
-# source $PLUGIN_PATH/config.sh
+# source "${PLUGIN_PATH}/.secrets"
+# source "${PLUGIN_PATH}/config.sh"
 
 is_valid_network () {
   log "Are we on the right network to do this?"
-  return 0 # 1 = Nope! Don't do anything
+  return 0 # Non-zero here means "nope!"
 }
 
 is_logged_in () {
@@ -88,7 +88,7 @@ login () {
 }
 
 is_reboot_allowed () {
-  return 0 # Here, 1 means "allow reboot"
+  return 1 # Non-zero here means "nope!"
 }
 
 report_online_status () {
