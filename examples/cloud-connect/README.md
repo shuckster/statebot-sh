@@ -1,5 +1,22 @@
 # Cloud Connect
 
+```
+
+  idle ->
+
+  pinging -> (online | offline) -> pinging
+  offline -> logging-in -> (online | failure)
+  failure -> offline
+
+  // Go directly to [offline] on Hotplug "ifdown"
+  online -> offline
+
+  // Pause/resume functionality:
+  (idle|pinging|online|offline|logging-in|failure) ->
+    paused -> idle
+
+```
+
 This is a shell-script that helps automate connecting to public wifi hotspots that sit behind a captive-portal (ie; the ones where you need an account.)
 
 It works using `plugins/`, and two are bundled: An example that demonstrates how to write a plugin, and another that works with `BTWifi-with-FON` hotspots (so long as you have a valid and active account! :)

@@ -3,25 +3,20 @@
 
 CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
 FAILURE_LIMIT=20
-let FAILURE_COUNT=0
+FAILURE_COUNT=0
 
 CLOUD_CONNECT_CHART='
 
   idle ->
 
-  pinging ->
-    (online | offline) ->
-      pinging
-
-  offline ->
-    logging-in -> (online | failure)
-
+  pinging -> (online | offline) -> pinging
+  offline -> logging-in -> (online | failure)
   failure -> offline
 
   // Go directly to [offline] on Hotplug "ifdown"
   online -> offline
 
-  // Pause/resume functionality.
+  // Pause/resume functionality:
   (idle|pinging|online|offline|logging-in|failure) ->
     paused -> idle
 
