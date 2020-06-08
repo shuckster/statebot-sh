@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tweak demo.sh, put it in /examples
 
 ### Added
+- New example: Rerun!
 - Some basic tests
 
 ## [1.0.1] - 2020-05-16
