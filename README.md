@@ -120,9 +120,7 @@ else
 fi
 ```
 
-This example is available as `/demo.sh`.
-
-There is a more complex example in the `/examples` folder.
+This example, along with some more complex ones, is available in the `/examples` folder.
 
 # The API
 
