@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   if-statements without confusion. Anything using case_statebot
   will need to be updated, so this is a breaking-change
 
+### Added
+- case_statebot tests
+
 ## [1.0.2] - 2020-06-08
 ### Fixed
 - statebot_reset updates CURRENT_STATE for cases where you want to
