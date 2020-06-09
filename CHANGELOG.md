@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2020-06-10
+### Fixed
+- Styling/linting
+
+### Added
+- Test for statebot_emit persist option
+
+
 ## [2.1.0] - 2020-06-09
 ### Changed
 - Update shebang back to `#!/bin/sh` with the help of shellcheck.
