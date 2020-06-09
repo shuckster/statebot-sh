@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.0] - 2020-06-09
 ### Changed
+- Update shebang back to `#!/bin/sh` with the help of shellcheck.
+  Still not completely POSIX thanks to the use of `local`, but
+  that doesn't seem to be a huge deal...?
+
+## [2.0.0] - 2020-06-09
+### Changed
 - Invert exit-codes of case_statebot to permit direct usage in
   if-statements without confusion. Anything using case_statebot
   will need to be updated, so this is a breaking-change
@@ -32,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2020-05-16
 ### Changed
-- Update shebang: #!/bin/bash is more portable that #!/bin/sh
+- Update shebang: `#!/bin/bash` is more portable that `#!/bin/sh`
 
 ## [1.0.0] - 2020-04-20
 ### Added

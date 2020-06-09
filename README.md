@@ -39,7 +39,7 @@ chmod +x statebot.sh
 ## A small example:
 
 ```sh
-#!/bin/bash
+#!/bin/sh
 STATEBOT_LOG_LEVEL=4
 # 0 for silence, 4 for everything
 
@@ -81,7 +81,7 @@ on_transitions () {
 
   case $1 in
     'idle->pending')
-      THEN="echo Hello, World!"
+      THEN="hello_world"
     ;;
     'rejected->idle'|'resolved->idle')
       THEN="all_finished"
@@ -92,6 +92,7 @@ on_transitions () {
 }
 
 # Implement any "THEN" functions:
+hello_world() { echo "Hello, World!"; }
 all_finished() { echo "That was easy!"; }
 
 # Import Statebot
