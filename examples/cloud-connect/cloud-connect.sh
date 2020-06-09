@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC2219,SC2034,SC1090,SC1091
+# shellcheck disable=SC2219,SC2034,SC1090,SC1091,SC2039
 
 CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
 FAILURE_LIMIT=20
@@ -46,7 +46,7 @@ case $PLUGIN_EXIT in
   ;;
 esac
 echo "Loading plugin: $PLUGIN_API"
-source "$PLUGIN_API"
+. "$PLUGIN_API"
 
 # Check that the right functions are available
 VALID_PLUGIN=1
@@ -59,7 +59,7 @@ do
     VALID_PLUGIN=0
   fi
 done
-if [[ $VALID_PLUGIN -eq 0 ]]
+if [ "$VALID_PLUGIN" -eq 0 ]
 then
   exit 1
 fi
@@ -70,7 +70,7 @@ fi
 
 STATEBOT_LOG_LEVEL=4
 STATEBOT_USE_LOGGER=0
-source ../../statebot.sh
+. ../../statebot.sh
 
 #
 # CHECK WE'RE ON A VALID NETWORK
@@ -199,25 +199,25 @@ log_failure ()
 
 load_fail_count_for_this_session ()
 {
-  if [[ -f $CLOUD_CONNECT_ERRORS ]]
+  if [ -f "$CLOUD_CONNECT_ERRORS" ]
   then
-    let FAILURE_COUNT=$(cat $CLOUD_CONNECT_ERRORS)
+    FAILURE_COUNT=$(cat "$CLOUD_CONNECT_ERRORS")
   fi
 }
 
 bump_fail_count_for_this_session ()
 {
-  let FAILURE_COUNT+=1
+  : $((FAILURE_COUNT+=1))
   echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
   warn "Failure count: $FAILURE_COUNT"
 }
 
 unbump_fail_count_for_this_session ()
 {
-  let FAILURE_COUNT-=1
-  if [[ $FAILURE_COUNT -lt 0 ]]
+  : $((FAILURE_COUNT-=1))
+  if [ "$FAILURE_COUNT" -lt 0 ]
   then
-    let FAILURE_COUNT=0
+    FAILURE_COUNT=0
   fi
   echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
   log "Failure count: $FAILURE_COUNT"
@@ -225,7 +225,7 @@ unbump_fail_count_for_this_session ()
 
 we_have_failed_enough_to_try_a_reboot ()
 {
-  if [[ $FAILURE_COUNT -ge $FAILURE_LIMIT ]]
+  if [ $FAILURE_COUNT -ge $FAILURE_LIMIT ]
   then
     return 0
   fi
@@ -262,7 +262,7 @@ load_fail_count_for_this_session
 statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
 
 # Emit events from the command-line
-if [[ "$EVENT" != "" ]]
+if [ "$EVENT" != "" ]
 then
   statebot_emit "$EVENT"
 fi

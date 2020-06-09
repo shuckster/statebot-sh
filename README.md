@@ -96,8 +96,9 @@ hello_world() { echo "Hello, World!"; }
 all_finished() { echo "That was easy!"; }
 
 # Import Statebot
-cd "${0%/*}"; source ./statebot.sh
+cd "${0%/*}" || exit
 # (^- change the working-directory to where this script is)
+. ./statebot.sh
 
 statebot_init "demo" "idle" "start" "$PROMISE_CHART"
 #   machine name -^     ^      ^           ^

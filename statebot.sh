@@ -77,8 +77,9 @@ A basic implementation:
   all_finished() { echo "That was easy!"; }
 
   # Import Statebot and initialise it
-  cd "${0%/*}"; source ./statebot.sh
+  cd "${0%/*}" || exit
   # (^- this changes the working-dir to the script-dir)
+  . ./statebot.sh
 
   statebot_init "demo" "idle" "start" "$PROMISE_CHART"
 

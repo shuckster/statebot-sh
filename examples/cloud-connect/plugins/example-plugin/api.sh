@@ -3,8 +3,8 @@
 # At this point, PLUGIN_PATH is available for you to import
 # credentials and configuration from other files, if you like!
 
-# source "${PLUGIN_PATH}/.secrets"
-# source "${PLUGIN_PATH}/config.sh"
+# . "${PLUGIN_PATH}/.secrets"
+# . "${PLUGIN_PATH}/config.sh"
 
 is_valid_network ()
 {
