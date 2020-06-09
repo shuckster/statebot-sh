@@ -1,9 +1,9 @@
-#!/bin/bash
-# shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219
+#!/bin/sh
+# shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219,SC2039
 
 __STATEBOT_INFO__=':
 |
-| STATEBOT-SH 2.0.0
+| STATEBOT-SH 2.1.0
 | - Write more robust and understandable programs.
 |
 | Github repo w/ example usage:
@@ -21,7 +21,7 @@ __STATEBOT_EXAMPLE__='
 A basic implementation:
 -----------------------
 
-  #!/bin/bash
+  #!/bin/sh
   STATEBOT_LOG_LEVEL=4
   # 0 for silence, 4 for everything
 
@@ -82,12 +82,12 @@ A basic implementation:
 
   statebot_init "demo" "idle" "start" "$PROMISE_CHART"
 
-  if [[ "$1" == "" ]]; then
+  if [ "$1" = "" ]; then
     exit
   fi
 
   # For this demo, allow emitting events from the command-line:
-  if [[ "$1" == "reset" ]]; then
+  if [ "$1" = "reset" ]; then
     statebot_reset
   else
     statebot_emit "$1"
@@ -188,20 +188,20 @@ __STATEBOT_EVENT_COUNT=0
 
 # Command-line usage
 echo "$0" | grep -q -e '/statebot\.sh$'
-if [[ $? -eq 0  ]]
+if [ $? -eq 0 ]
 then
   echo "$__STATEBOT_INFO__"
-  if [[ "$1" != "--example" && "$1" != "--help" ]]; then
+  if [ "$1" != "--example" ] && [ "$1" != "--help" ]; then
     echo "See an example with: ./statebot.sh --example"
   else
     echo "$__STATEBOT_EXAMPLE__"
   fi
-  if [[ "$1" != "--api" && "$1" != "--help" ]]; then
+  if [ "$1" != "--api" ] && [ "$1" != "--help" ]; then
     echo "See the API: ./statebot.sh --api"
   else
     echo "$__STATEBOT_API__"
   fi
-  if [[ "$1" != "--db" ]]; then
+  if [ "$1" != "--db" ]; then
     echo "See the status of all your machines: ./statebot.sh --db"
   else
     echo ""
@@ -230,7 +230,7 @@ PREVIOUS_EVENT=""
 # Change it using the variable STATEBOT_DB before importing
 # Statebot into your script:
 #
-if [[ "$STATEBOT_DB" != "" ]]; then
+if [ "$STATEBOT_DB" != "" ]; then
   __STATEBOT_DB__=$STATEBOT_DB
 fi
 
@@ -238,7 +238,7 @@ fi
 # The log-level can be changed using STATEBOT_LOG_LEVEL. Again,
 # do this before importing Statebot into your script.
 #
-if [[ "$STATEBOT_LOG_LEVEL" != "" ]]; then
+if [ "$STATEBOT_LOG_LEVEL" != "" ]; then
   __STATEBOT_LOG_LEVEL__=$STATEBOT_LOG_LEVEL
 fi
 
@@ -250,13 +250,13 @@ logit () {
   # shellcheck disable=SC2124
   local MSG="$@"
 
-  if [[ $__STATEBOT_HANDLING_EVENT__ -eq 1 ]]; then
+  if [ $__STATEBOT_HANDLING_EVENT__ -eq 1 ]; then
     MSG=$(echo "$MSG" | sed "s/<eId> */<eId:$__STATEBOT_EVENT_COUNT> /")
   else
     MSG=$(echo "$MSG" | sed 's/<eId> *//')
   fi
 
-  if [[ "$STATEBOT_USE_LOGGER" == "1" ]]; then
+  if [ "$STATEBOT_USE_LOGGER" = "1" ]; then
     MSG=$(echo "$MSG" | sed 's/^-/=/')
     logger -s -t "statebot" "$MSG"
   else
@@ -266,21 +266,21 @@ logit () {
 
 info () {
   # shellcheck disable=SC2145
-  [[ $__STATEBOT_LOG_LEVEL__ -ge 4 ]] && logit "INFO: ${@}"
+  [ "$__STATEBOT_LOG_LEVEL__" -ge 4 ] && logit "INFO: ${@}"
 }
 
 log () {
-  [[ $__STATEBOT_LOG_LEVEL__ -ge 3 ]] && logit "${@}"
+  [ "$__STATEBOT_LOG_LEVEL__" -ge 3 ] && logit "${@}"
 }
 
 warn () {
   # shellcheck disable=SC2145
-  [[ $__STATEBOT_LOG_LEVEL__ -ge 2 ]] && logit "WARN: ${@}"
+  [ "$__STATEBOT_LOG_LEVEL__" -ge 2 ] && logit "WARN: ${@}"
 }
 
 error () {
   # shellcheck disable=SC2145
-  [[ $__STATEBOT_LOG_LEVEL__ -ge 1 ]] && logit "ERR!: ${@}"
+  [ "$__STATEBOT_LOG_LEVEL__" -ge 1 ] && logit "ERR!: ${@}"
 }
 
 dump () {
@@ -427,7 +427,7 @@ decompose_transitions () {
 # Since no arrays are allowed in sh, we use a fake one.
 #
 __statebot_then_stack_push () {
-  let __STATEBOT_THEN_STACK_SIZE__+=1
+  : $((__STATEBOT_THEN_STACK_SIZE__+=1))
   local ARRAY_ITEM="__STATEBOT_THEN_FN_$__STATEBOT_THEN_STACK_SIZE__"
   eval "$ARRAY_ITEM"='$@'
 }
@@ -444,17 +444,17 @@ __statebot_then_stack_clear_topmost () {
 }
 
 __statebot_run_then_stack () {
-  if [[ $__STATEBOT_THEN_STACK_SIZE__ -eq 0 ]]; then
+  if [ "$__STATEBOT_THEN_STACK_SIZE__" -eq 0 ]; then
     return 1
   fi
 
   local NEXT_THEN
-  while [[ $__STATEBOT_THEN_STACK_SIZE__ -gt 0 ]]; do
+  while [ "$__STATEBOT_THEN_STACK_SIZE__" -gt 0 ]; do
     NEXT_THEN="$(__statebot_then_stack_peek)"
     __statebot_then_stack_clear_topmost
-    let __STATEBOT_THEN_STACK_SIZE__-=1
+    : $((__STATEBOT_THEN_STACK_SIZE__-=1))
     $NEXT_THEN
-    if [[ $? -ne 0 ]]; then
+    if [ $? -ne 0 ]; then
       warn "<eId> Problem running THEN function: $NEXT_THEN"
     fi
   done
@@ -466,7 +466,7 @@ __statebot_run_then_stack () {
 __statebot_transitions_available_from_here() {
   for TRANSITION in ${STATEBOT_VALID_TRANSITIONS}; do
     echo "$TRANSITION" | grep -q "^$CURRENT_STATE->[^$]*"
-    if [[ $? -ne 0 ]]; then
+    if [ $? -ne 0 ]; then
       continue
     fi
     echo "$TRANSITION"
@@ -493,13 +493,13 @@ __statebot_get_handler_for_transition () {
 
   local TEST_TRANSITION="$1"
   local LAST_TRANSITION="$PREVIOUS_STATE->$CURRENT_STATE"
-  if [[ "$TEST_TRANSITION" != "$LAST_TRANSITION" ]]; then
+  if [ "$TEST_TRANSITION" != "$LAST_TRANSITION" ]; then
     warn "Not handling invalid transition: $TEST_TRANSITION"
     return 1
   fi
 
   type 'on_transitions' 2>&1|grep -q 'function'
-  if [[ $? -eq 1 ]]; then
+  if [ $? -eq 1 ]; then
     info "<eId> No on_transitions() function: Skipping transition handlers"
     return 1
   fi
@@ -508,7 +508,7 @@ __statebot_get_handler_for_transition () {
 
   # Process user-defined on_transitions() ...
   local THEN; THEN=$(on_transitions "$LAST_TRANSITION")
-  if [[ "$THEN" != "" ]]; then
+  if [ "$THEN" != "" ]; then
     __STATEBOT_AFTER_TRANSITION__="$THEN"
   fi
 
@@ -524,12 +524,12 @@ __statebot_get_handler_for_transition () {
 #
 __statebot_change_state_for_event_and_get_handler () {
   type 'perform_transitions' 2>&1|grep -q 'function'
-  if [[ $? -eq 1 ]]; then
+  if [ $? -eq 1 ]; then
     info "<eId> No perform_transitions() function: Skipping event handlers"
     return 1
   fi
 
-  if [[ "$1" == "" ]]; then
+  if [ "$1" = "" ]; then
     __statebot_bail "No event to process!"
     return 1
   fi
@@ -542,7 +542,7 @@ __statebot_change_state_for_event_and_get_handler () {
   for TRANSITION in $(__statebot_transitions_available_from_here); do
     local ON_THEN; ON_THEN=$(perform_transitions "$TRANSITION")
     local ON; ON=$(echo "$ON_THEN"|awk '{print $1}')
-    if [[ "$PREVIOUS_EVENT" != "$ON" ]]; then
+    if [ "$PREVIOUS_EVENT" != "$ON" ]; then
       continue
     fi
 
@@ -564,7 +564,7 @@ __statebot_change_state_for_event_and_get_handler () {
 # Shows information about the current machine.
 #
 __statebot_info () {
-  if [[ $__STATEBOT_INITIALISED__ -eq 0 ]]; then
+  if [ "$__STATEBOT_INITIALISED__" -eq 0 ]; then
     __statebot_bail "Statebot not initialised"
     return 1
   fi
@@ -573,7 +573,7 @@ __statebot_info () {
   log "| |  Statebot :: $STATEBOT_NAME"
   log "| |  Current state: [$CURRENT_STATE]"
 
-  if [[ "$PREVIOUS_EVENT" != "" ]]; then
+  if [ "$PREVIOUS_EVENT" != "" ]; then
     log "| :  Event pending: $PREVIOUS_EVENT"
   fi
 
@@ -632,7 +632,7 @@ __statebot_init () {
   __STATEBOT_INITIAL_EVENT__="$3"
 
   # Check for DB
-  if [[ -f "$__STATEBOT_DB__" ]]; then
+  if [ -f "$__STATEBOT_DB__" ]; then
     : # noop
   else
     info "Creating DB: $__STATEBOT_DB__"
@@ -641,7 +641,7 @@ __statebot_init () {
 
   # Check for DB record, set initial values
   grep -q "^$NAME," "$__STATEBOT_DB__"
-  if [[ $? -eq 1 ]]; then
+  if [ $? -eq 1 ]; then
     info "No record of this machine, creating..."
     echo "$NAME,$__STATEBOT_INITIAL_STATE__,$__STATEBOT_INITIAL_EVENT__" >> "$__STATEBOT_DB__"
   fi
@@ -679,12 +679,12 @@ statebot_emit () {
   return $RETURN
 }
 __statebot_emit () {
-  if [[ $__STATEBOT_INITIALISED__ -eq 0 ]]; then
+  if [ $__STATEBOT_INITIALISED__ -eq 0 ]; then
     __statebot_bail "Statebot not initialised"
     return 1
   fi
-  if [[ "$1" == "" ]]; then
-    if [[ "$2" != "__first-run__" ]]; then
+  if [ "$1" = "" ]; then
+    if [ "$2" != "__first-run__" ]; then
       __statebot_bail "No event to process"
     fi
     return 1
@@ -698,14 +698,14 @@ __statebot_emit () {
   __STATEBOT_AFTER_EVENT__=""
   __STATEBOT_AFTER_TRANSITION__=""
 
-  let __STATEBOT_EVENT_COUNT+=1
+  : $((__STATEBOT_EVENT_COUNT+=1))
   info "<eId> Handling event: $EMITTED_EVENT, from state [$CURRENT_STATE]"
 
   # Persist event for another run, or execute it immediately?
   local PERSIST_EVENT=""
   local EVENT_HANDLED=0
   local STATE_CHANGED=0
-  if [[ "$PERSIST_OPTION" == "persist" ]]; then
+  if [ "$PERSIST_OPTION" = "persist" ]; then
     info "<eId> Peristing event instead of emitting it"
     PERSIST_EVENT="$EMITTED_EVENT"
     PREVIOUS_EVENT=""
@@ -713,12 +713,12 @@ __statebot_emit () {
   else
     __statebot_change_state_for_event_and_get_handler "$EMITTED_EVENT"
     STATE_CHANGED=$?
-    if [[ $STATE_CHANGED -eq 1 ]]; then
+    if [ $STATE_CHANGED -eq 1 ]; then
       EVENT_HANDLED=1
     fi
   fi
 
-  if [[ $EVENT_HANDLED -eq 0 ]]; then
+  if [ $EVENT_HANDLED -eq 0 ]; then
     info "<eId> Nothing happened"
   fi
 
@@ -730,23 +730,23 @@ __statebot_emit () {
   DB=$(sed -e "s/^$NAME,.*/$NAME,$STATE,$EVENT/" "$__STATEBOT_DB__")
   echo "$DB" > "$__STATEBOT_DB__"
 
-  if [[ $STATE_CHANGED -eq 1 ]]; then
+  if [ $STATE_CHANGED -eq 1 ]; then
     # Handle perform_transitions() THEN="..."
-    if [[ "$__STATEBOT_AFTER_EVENT__" != "" ]]; then
+    if [ "$__STATEBOT_AFTER_EVENT__" != "" ]; then
       __statebot_then_stack_push "$__STATEBOT_AFTER_EVENT__"
     fi
 
     __statebot_get_handler_for_transition "$__PREVIOUS_STATE->$CURRENT_STATE"
 
     # Handle on_transitions() THEN="..."
-    if [[ "$__STATEBOT_AFTER_TRANSITION__" != "" ]]; then
+    if [ "$__STATEBOT_AFTER_TRANSITION__" != "" ]; then
       __statebot_then_stack_push "$__STATEBOT_AFTER_TRANSITION__"
       __STATEBOT_AFTER_TRANSITION__=""
     fi
   fi
 
   __STATEBOT_HANDLING_EVENT__=0
-  if [[ $EVENT_HANDLED -eq 1 ]]; then
+  if [ $EVENT_HANDLED -eq 1 ]; then
     return 0
   else
     return 1
@@ -765,7 +765,7 @@ statebot_enter () {
   return $RETURN
 }
 __statebot_enter () {
-  if [[ $__STATEBOT_INITIALISED__ -eq 0 ]]; then
+  if [ $__STATEBOT_INITIALISED__ -eq 0 ]; then
     __statebot_bail "Statebot not initialised"
     return 1
   fi
@@ -773,7 +773,7 @@ __statebot_enter () {
   local NEXT_STATE="$1"
   local STATE_CHANGED=0
 
-  if [[ "$CURRENT_STATE" == "$NEXT_STATE" ]]
+  if [ "$CURRENT_STATE" = "$NEXT_STATE" ]
   then
     info "<eId> Not changing state, already in: $NEXT_STATE"
     return 1
@@ -781,7 +781,7 @@ __statebot_enter () {
 
   for STATE in $(statebot_states_available_from_here)
   do
-    if [[ "$STATE" != "$NEXT_STATE" ]]; then
+    if [ "$STATE" != "$NEXT_STATE" ]; then
       continue
     fi
 
@@ -802,7 +802,7 @@ __statebot_enter () {
     break
   done
 
-  if [[ $STATE_CHANGED -eq 1 ]]; then
+  if [ $STATE_CHANGED -eq 1 ]; then
     PREVIOUS_STATE="$__PREVIOUS_STATE"
     __statebot_get_handler_for_transition "$PREVIOUS_STATE->$CURRENT_STATE"
   else
@@ -810,12 +810,12 @@ __statebot_enter () {
   fi
 
   # Handle on_transitions() THEN="..."
-  if [[ "$__STATEBOT_AFTER_TRANSITION__" != "" ]]; then
+  if [ "$__STATEBOT_AFTER_TRANSITION__" != "" ]; then
     __statebot_then_stack_push "$__STATEBOT_AFTER_TRANSITION__"
     __STATEBOT_AFTER_TRANSITION__=""
   fi
 
-  if [[ $STATE_CHANGED -eq 1 ]]; then
+  if [ $STATE_CHANGED -eq 1 ]; then
     return 0
   else
     return 1
@@ -829,7 +829,7 @@ __statebot_enter () {
 #   statebot_reset
 #
 statebot_reset () {
-  if [[ $__STATEBOT_INITIALISED__ -eq 0 ]]; then
+  if [ $__STATEBOT_INITIALISED__ -eq 0 ]; then
     __statebot_bail "Statebot not initialised"
     return 1
   fi
@@ -898,8 +898,10 @@ case_statebot () {
   local MATCH="$1"
   local TRANSITIONS
   TRANSITIONS=$(decompose_chart "$2")
-  for TRANSITION in ${TRANSITIONS}; do
-    if [[ "$TRANSITION" == "$MATCH" ]]; then
+  for TRANSITION in ${TRANSITIONS}
+  do
+    if [ "$TRANSITION" = "$MATCH" ]
+    then
       return 0
     fi
   done

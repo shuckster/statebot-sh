@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 # To use this, add the following to a new file in /etc/hotplug.d/iface/
 #
-# #!/bin/bash
+# #!/bin/sh
 # export DEVICE
 # export ACTION
 # /path/to/this/file/hotplug.sh
 
 # Change apcli0 to your network interface
-if [[ "$DEVICE" != "apcli0" ]]
+if [ "$DEVICE" != "apcli0" ]
 then
   exit
 fi
@@ -16,11 +16,13 @@ fi
 logger -t "cloud-connect" "HOTPLUG :: Device: $DEVICE / Action: $ACTION"
 
 cd "${0%/*}" || exit 255
-if [[ "$ACTION" == "ifdown" ]]
+
+if [ "$ACTION" = "ifdown" ]
 then
   ./cloud-connect.sh bt-fon ifdown
 fi
-if [[ "$ACTION" == "ifup" ]]
+
+if [ "$ACTION" = "ifup" ]
 then
   sleep 5
   ./cloud-connect.sh bt-fon check

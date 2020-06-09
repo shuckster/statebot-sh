@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 # shellcheck disable=SC1090
 
-source "${PLUGIN_PATH}/.secrets"
-source "${PLUGIN_PATH}/config.sh"
+. "${PLUGIN_PATH}/.secrets"
+. "${PLUGIN_PATH}/config.sh"
 
 is_valid_network ()
 {

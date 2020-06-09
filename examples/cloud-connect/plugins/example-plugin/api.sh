@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # At this point, PLUGIN_PATH is available for you to import
 # credentials and configuration from other files, if you like!

@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 # shellcheck disable=SC1091,SC2219
-source ./assert.sh
+. ./assert.sh
 
 TEST_CHART='
   idle -> first -> second -> third -> last
@@ -57,18 +57,18 @@ on_transitions()
 callback_count=0
 expected_callback_count=8
 
-entered_first() { let callback_count+=1; }
-entered_second() { let callback_count+=1; }
-entered_third() { let callback_count+=1; }
-entered_last() { let callback_count+=1; }
+entered_first() { : $((callback_count+=1)); }
+entered_second() { : $((callback_count+=1)); }
+entered_third() { : $((callback_count+=1)); }
+entered_last() { : $((callback_count+=1)); }
 
 # Import Statebot and initialise it
 cd "${0%/*}" || exit 255
 # shellcheck disable=SC2034
 STATEBOT_LOG_LEVEL=0
-source ../statebot.sh
+. ../statebot.sh
 
-statebot_init "seq_single_event" "idle" "" "$TEST_CHART"
+statebot_init "seq_statebot_emit" "idle" "" "$TEST_CHART"
 statebot_reset
 assert_eq "$CURRENT_STATE" "idle" "First state is 'idle'"
 

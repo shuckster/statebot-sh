@@ -1,5 +1,5 @@
-#!/bin/bash
-# shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219,SC2086
+#!/bin/sh
+# shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219,SC2039,SC2086
 
 RERUN_JOB="/tmp/rerun-job.txt"
 RERUN_LOG="/tmp/rerun-failures.txt"
@@ -96,7 +96,7 @@ load_run_position()
   rerun_info=$(cat "${RERUN_JOB}")
 
   start_from_run=$(echo "${rerun_info}"|awk 'BEGIN { FS="!" } { print $1 }')
-  let start_from_run+=1
+  : $((start_from_run+=1))
   max_runs=$(echo "${rerun_info}"|awk 'BEGIN { FS="!" } { print $2 }')
   failures=$(echo "${rerun_info}"|awk 'BEGIN { FS="!" } { print $3 }')
   unique_failures=$(echo "${rerun_info}"|awk 'BEGIN { FS="!" } { print $4 }')
@@ -105,7 +105,7 @@ load_run_position()
 
 rotate_logs()
 {
-  if ! [[ -f "${RERUN_LOG}" ]]
+  if [ ! -f "${RERUN_LOG}" ]
   then
     return
   fi
@@ -130,24 +130,24 @@ rollers=""
 rolling_avg()
 {
   local rolling_max=5
-  if [[ $rolling_idx -ge $rolling_max ]]
+  if [ $rolling_idx -ge $rolling_max ]
   then
-    rollers=`echo "$rollers"|awk '{ print $2 " " $3 " " $4 " " $5 }'`
+    rollers=$(echo "$rollers"|awk '{ print $2 " " $3 " " $4 " " $5 }')
   fi
   rollers="$rollers $1"
 
   local sum=0
   for next in $rollers
   do
-    let sum+=next
+    : $((sum+=next))
   done
 
-  if [[ $rolling_idx -lt $rolling_max ]]
+  if [ $rolling_idx -lt $rolling_max ]
   then
-    let rolling_idx+=1
+    : $((rolling_idx+=1))
   fi
 
-  let avg=sum/rolling_idx
+  : $((avg=sum/rolling_idx))
   echo "$avg"
 }
 
@@ -185,10 +185,11 @@ eta_from_seconds()
     ')
   fi
 
+  # shellcheck disable=SC2006,SC2086
   echo "$eta (`time_from_seconds $seconds`)"
 }
 
-WHICH_MD5=`which md5||which md5sum`
+WHICH_MD5=$(which md5||which md5sum)
 
 add_failure_to_log()
 {
@@ -201,7 +202,7 @@ add_failure_to_log()
 
   if ! grep -q "$output_hash" "${RERUN_LOG}"
   then
-    let unique_failures+=1
+    : $((unique_failures+=1))
     {
       echo "$output_without_cruft"
       echo ""
@@ -213,7 +214,7 @@ add_failure_to_log()
     } >> "${RERUN_LOG}"
   fi
 
-  let failures+=1
+  : $((failures+=1))
 }
 
 print_unique_failures()
@@ -233,16 +234,16 @@ print_single_run()
   count="$1"
   seconds=$(echo "$2"|awk 'BEGIN { FS="." } { print $1 }')
 
-  let total_duration+=seconds
+  : $((total_duration+=seconds))
   last_run_duration=$seconds
-  let remaining_tests=max_runs-count
+  : $((remaining_tests=max_runs-count))
   avg_duration=$(rolling_avg $last_run_duration)
-  let estimated_remaining_duration=avg_duration*remaining_tests
+  : $((estimated_remaining_duration=avg_duration*remaining_tests))
 
   echo "| Finished run $count of $max_runs:"
   echo ">  Took: $(time_from_seconds $last_run_duration)"
 
-  if [[ "$count" != "$max_runs" ]]
+  if [ "$count" != "$max_runs" ]
   then
     echo ">  ~ETA: $(eta_from_seconds $estimated_remaining_duration)"
   fi
@@ -253,15 +254,16 @@ print_single_run()
 run_loop()
 {
   count=$start_from_run
-  while [[ $count -le $max_runs ]]
+  while [ $count -le $max_runs ]
   do
     echo "Running $count of $max_runs..."
+
     local full_output
     full_output="$( (time -p $cmd_to_run) 2>&1)"
-
-    if [[ $? -ne 0 ]]
+    # shellcheck disable=SC2181
+    if [ $? -ne 0 ]
     then
-      echo -e "$RED^ FAILED!$NOCOLOUR"
+      echo "$RED^ FAILED!$NOCOLOUR"
       add_failure_to_log "$full_output"
     fi
 
@@ -269,32 +271,32 @@ run_loop()
     time_output=$(echo "$full_output"|grep "real\s*\d*"|awk '{ print $2 }')
     print_single_run "$count" "$time_output"
     run_so_far=$count
-    let count+=1
+    : $((count+=1))
   done
 }
 
 print_run_summary()
 {
-  if [[ $failures -ne 0 ]]
+  if [ "$failures" -ne 0 ]
   then
-    echo -e "$RED+--- "
+    echo "$RED+--- "
     echo "| Done, printing unique failures:"
     echo "| "
 
-    echo -e "$ORANGE"
+    echo "$ORANGE"
     print_unique_failures
   else
-    echo -e "$GREEN+--- "
+    echo "$GREEN+--- "
     echo "| Done, without any failures!"
     echo "| "
   fi
 
-  echo -e "$NOCOLOUR+--- "
+  echo "$NOCOLOUR+--- "
   echo "| Started at: $start_time"
   echo "|   Finished: $(date)"
   echo "| Time taken: $(time_from_seconds $total_duration)"
 
-  if [[ $run_so_far -ne $max_runs ]]
+  if [ $run_so_far -ne $max_runs ]
   then
     echo "|   Failures: $failures out of $run_so_far runs ($max_runs max)"
   else
@@ -332,8 +334,8 @@ all_done()
 catch_interrupt()
 {
   echo ""
-  echo -e "${PURPLE}[CTRL+C] Manual intervention, pausing..."
-  echo -e "Run again without args to resume: ./rerun.sh$NOCOLOUR"
+  echo "${PURPLE}[CTRL+C] Manual intervention, pausing..."
+  echo "Run again without args to resume: ./rerun.sh$NOCOLOUR"
   echo ""
 
   save_run_position
@@ -344,7 +346,7 @@ catch_interrupt()
 # Import + init Statebot
 cd "${0%/*}" || exit 255
 # shellcheck disable=SC1091
-STATEBOT_LOG_LEVEL=3 source ../../statebot.sh
+STATEBOT_LOG_LEVEL=3 . ../../statebot.sh
 statebot_init "rerun" "idle" "" "$RERUN_CHART"
 trap "statebot_emit ctrl-c-hit" INT
 
@@ -352,7 +354,7 @@ trap "statebot_emit ctrl-c-hit" INT
 # Entry point
 #
 
-if [[ "$1" == "reset" ]]
+if [ "$1" = "reset" ]
 then
   echo ""
   echo "Resetting..."
@@ -361,9 +363,9 @@ then
   exit 255
 fi
 
-if [[ "$CURRENT_STATE" == "paused" ]]
+if [ "$CURRENT_STATE" = "paused" ]
 then
-  if [[ "$1" == "" ]]
+  if [ "$1" = "" ]
   then
     load_run_position
     statebot_emit "resume-run"
@@ -372,7 +374,7 @@ then
   fi
 fi
 
-if [[ "$CURRENT_STATE" != "idle" ]]
+if [ "$CURRENT_STATE" != "idle" ]
 then
   echo ""
   echo "Looks like you're already running something!"
@@ -383,8 +385,7 @@ then
   exit 255
 fi
 
-echo "$1" | grep -Eq '^[0-9]+$'
-if [[ $? -ne 0 ]]
+if ! echo "$1" | grep -Eq '^[0-9]+$'
 then
   echo ""
   echo "Please specify the number of iterations as the first argument"
@@ -396,7 +397,7 @@ max_runs=$1
 shift 1
 cmd_to_run="${*}"
 
-if [[ "$cmd_to_run" == "" ]]
+if [ "$cmd_to_run" = "" ]
 then
   echo ""
   echo "Please specify the thing to run"

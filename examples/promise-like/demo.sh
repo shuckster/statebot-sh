@@ -1,5 +1,5 @@
-#!/bin/bash
-# shellcheck disable=SC2034,SC1091
+#!/bin/sh
+# shellcheck disable=SC2034,SC1091,SC2039
 
 STATEBOT_LOG_LEVEL=4
 # 0 for silence, 4 for everything
@@ -44,7 +44,7 @@ on_transitions ()
 
   case $1 in
     'idle->pending')
-      THEN="echo Hello, World!"
+      THEN="hello_world"
     ;;
     'rejected->idle'|'resolved->idle')
       THEN="all_finished"
@@ -55,11 +55,12 @@ on_transitions ()
 }
 
 # Implement any "THEN" functions:
+hello_world() { echo "Hello, World!"; }
 all_finished() { echo "That was easy!"; }
 
 # Import Statebot
 cd "${0%/*}" || exit 255
-source ../../statebot.sh
+. ../../statebot.sh
 # (^- change the working-directory to where this script is)
 
 statebot_init "demo" "idle" "start" "$PROMISE_CHART"
@@ -72,12 +73,12 @@ echo      "Current state: $CURRENT_STATE"
 echo     "Previous state: $PREVIOUS_STATE"
 echo "Last emitted event: $PREVIOUS_EVENT"
 
-if [[ "$1" == "" ]]; then
+if [ "$1" = "" ]; then
   exit
 fi
 
 # Allow resetting & emitting-events from the command-line:
-if [[ "$1" == "reset" ]]; then
+if [ "$1" = "reset" ]; then
   statebot_reset
 else
   statebot_emit "$1"
