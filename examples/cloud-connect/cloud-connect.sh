@@ -134,11 +134,11 @@ perform_transitions ()
     ;;
     *)
     # pause
-    case_statebot "$1" '
+    if case_statebot "$1" '
       (idle|pinging|online|offline|logging-in|failure) ->
         paused
     '
-    if [[ $? -eq 1 ]]; then
+    then
       ON="pause"
     fi
     ;;
