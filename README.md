@@ -302,10 +302,10 @@ To emulate this in Statebot-sh, the function `case_statebot` is offered:
 on_transitions () {
   local THEN=""
 
-  case_statebot $1 '
+  if case_statebot $1 '
     resolved | rejected -> done
   '
-  if [[ $? -eq 1 ]]; then
+  then
     THEN="echo 'All finished'"
   fi
 
@@ -334,10 +334,10 @@ perform_transitions () {
       # Now in the wildcard section, use
       # case_statebot() for your complex
       # rules:
-      case_statebot $1 '
+      if case_statebot $1 '
         rejected | resolved -> idle
       '
-      if [[ $? -eq 1 ]]; then
+      then
         ON="done"
       fi
     ;;

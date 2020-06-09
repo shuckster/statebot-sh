@@ -3,7 +3,7 @@
 
 __STATEBOT_INFO__=':
 |
-| STATEBOT-SH 1.0.2
+| STATEBOT-SH 2.0.0
 | - Write more robust and understandable programs.
 |
 | Github repo w/ example usage:
@@ -884,10 +884,10 @@ statebot_states_available_from_here() {
 #       # Now in the wildcard section, use
 #       # case_statebot() for your complex
 #       # rules:
-#       case_statebot $1 "
+#       if case_statebot $1 "
 #         rejected | resolved -> idle
 #       "
-#       if [[ $? -eq 1 ]]; then
+#       then
 #         ON="done"
 #       fi
 #     ;;
@@ -900,8 +900,8 @@ case_statebot () {
   TRANSITIONS=$(decompose_chart "$2")
   for TRANSITION in ${TRANSITIONS}; do
     if [[ "$TRANSITION" == "$MATCH" ]]; then
-      return 1
+      return 0
     fi
   done
-  return 0
+  return 1
 }

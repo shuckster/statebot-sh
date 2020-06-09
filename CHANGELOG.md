@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Invert exit-codes of case_statebot to permit direct usage in
+  if-statements without confusion. Anything using case_statebot
+  will need to be updated, so this is a breaking-change
 
 ## [1.0.2] - 2020-06-08
 ### Fixed
