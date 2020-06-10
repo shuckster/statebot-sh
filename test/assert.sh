@@ -1,7 +1,7 @@
 #!/bin/sh
-# shellcheck disable=SC2034,SC2039
+# shellcheck disable=SC2034,SC2039,SC2059
 
-if [ "$DISABLE_COLOUR" != "true" ]
+if [ "${DISABLE_COLOUR}" != "true" ]
 then
   NOCOLOUR="\033[0m"
   ORANGE="\033[0;33m"
@@ -22,12 +22,12 @@ assert_eq()
 {
   if [ "$1" = "$2" ]
   then
-    echo "$PREFIX_OKAY $3"
+    printf "${PREFIX_OKAY} $3\n"
   else
-    echo "$PREFIX_FAIL $3"
-    echo "      ${RED}- Expected: $2"
-    echo "      ${GREEN}+ Saw: $1"
-    echo "${NOCOLOUR}"
+    printf "${PREFIX_FAIL} $3\n"
+    printf "      ${RED}- Expected: $2\n"
+    printf "      ${GREEN}+ Saw: $1\n"
+    printf "${NOCOLOUR}\n"
     ONE_ASSERTION_FAILED=1
   fi
 }
@@ -36,23 +36,23 @@ assert_ne()
 {
   if [ "$1" != "$2" ]
   then
-    echo "$PREFIX_OKAY $3"
+    printf "${PREFIX_OKAY} $3\n"
   else
-    echo "$PREFIX_FAIL $3"
-    echo "      ${RED}- Expected: $1 to not be equal to $2"
+    printf "${PREFIX_FAIL} $3\n"
+    printf "      ${RED}- Expected: $1 to not be equal to $2\n"
     ONE_ASSERTION_FAILED=1
   fi
 }
 
 assert_describe()
 {
-  if [ "$ONE_ASSERTION_FAILED" = "0" ]
+  if [ "${ONE_ASSERTION_FAILED}" = "0" ]
   then
-    echo "$PREFIX_ALL_OKAY $1"
+    printf "${PREFIX_ALL_OKAY} $1\n"
     echo ""
     return 0
   else
-    echo "$PREFIX_ALL_FAIL $1"
+    printf "${PREFIX_ALL_FAIL} $1\n"
     echo ""
     return 1
   fi
