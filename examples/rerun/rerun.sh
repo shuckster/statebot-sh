@@ -167,25 +167,18 @@ time_from_seconds()
   }'
 }
 
+add_seconds_1 () { date -j -v+"${1}"S '+%H:%M:%S' 2> /dev/null; }
+add_seconds_2 () { date --date="+${1} seconds" "+%H:%M:%S" 2> /dev/null; }
+add_seconds_3 () { awk -v secs="${1}" 'BEGIN { print strftime("%H:%M:%S", systime() + secs) }' 2> /dev/null; }
+[ "$(add_seconds_1 1)" ] && add_seconds="add_seconds_1"
+[ "$(add_seconds_2 1)" ] && add_seconds="add_seconds_2"
+[ "$(add_seconds_3 1)" ] && add_seconds="add_seconds_3"
+
 eta_from_seconds()
 {
   local seconds="$1"
   local eta
-
-  # Sigh...
-  if uname|grep -q 'Darwin'
-  then
-    eta=$(date -j -v+"${seconds}"S '+%H:%M:%S')
-  else
-    eta=$(awk -v seconds="${seconds}" '
-    BEGIN {
-      ts = systime()
-      format = "%H:%M:%S"
-      print strftime(format, ts + seconds)
-    }
-    ')
-  fi
-
+  eta=$(${add_seconds} ${seconds})
   printf "%s (%s)" "${eta}" "$(time_from_seconds ${seconds})"
 }
 
