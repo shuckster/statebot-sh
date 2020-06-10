@@ -243,23 +243,31 @@ print_single_run()
 
 run_loop()
 {
-  count=${start_from_run}
+  local count=${start_from_run}
   while [ "${count}" -le "${max_runs}" ]
   do
     echo "Running ${count} of ${max_runs}..."
 
+    local start
     local full_output
-    full_output="$( (time -p ${cmd_to_run}) 2>&1)"
+    local success
+    local end
+    local execution_time_in_seconds
+
+    start=$(date +%s)
+    full_output="$(${cmd_to_run} 2>&1)"
+    success=$?
+    end=$(date +%s)
+    execution_time_in_seconds=$((end-start))
+
     # shellcheck disable=SC2181
-    if [ $? -ne 0 ]
+    if [ ${success} -ne 0 ]
     then
       printf "${RED}%s${NOCOLOUR} @ %s\n" '^ FAILED!' "$(date)"
       add_failure_to_log "${full_output}"
     fi
 
-    local time_output
-    time_output=$(printf "${full_output}"|grep "^real\s*\d*"|awk '{ print $2 }')
-    print_single_run "${count}" "${time_output}"
+    print_single_run "${count}" "${execution_time_in_seconds}"
     run_so_far="${count}"
     : $((count+=1))
   done
