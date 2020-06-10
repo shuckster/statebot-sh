@@ -68,11 +68,14 @@ perform_transitions ()
 # Colours for failure messages
 #
 
-NOCOLOUR="\033[0m"
-ORANGE="\033[0;33m"
-RED="\033[1;31m"
-GREEN="\033[1;32m"
-PURPLE='\033[1;35m'
+if [ -t 1 ]
+then
+  NOCOLOUR="\e[0m"
+  ORANGE="\e[0;33m"
+  RED="\e[1;31m"
+  GREEN="\e[1;32m"
+  PURPLE='\e[1;35m'
+fi
 
 #
 # Command to run, failure-counts, save/load
