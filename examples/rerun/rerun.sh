@@ -366,7 +366,8 @@ then
   then
     load_run_position
     statebot_emit "resume-run"
-  else
+  elif [ "$#" -eq 0 ]
+  then
     statebot_reset
   fi
 fi
