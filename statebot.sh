@@ -593,7 +593,8 @@ __statebot_change_state_for_event_and_get_handler ()
     info "<eId> Changing state: $TRANSITION"
     PREVIOUS_STATE="$CURRENT_STATE"
     CURRENT_STATE=$(echo "$TRANSITION"|awk 'BEGIN { FS="->" } { print $2 }')
-    __STATEBOT_AFTER_EVENT__=$(echo "$ON_THEN"|awk '{ $1=""; print $0 }')
+    __STATEBOT_AFTER_EVENT__=$(echo "$ON_THEN"|awk 'BEGIN { FS=" " } { print $2 }')
+
     local STATE_CHANGED=1
     break
   done

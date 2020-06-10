@@ -6,13 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2020-06-11
+### Fixed
+- perform_transitions() THEN-callbacks not running in some shells
+- Improve portability of Rerun example
+- More styling/linting
+
 ## [2.1.1] - 2020-06-10
 ### Fixed
 - Styling/linting
 
 ### Added
 - Test for statebot_emit persist option
-
 
 ## [2.1.0] - 2020-06-09
 ### Changed
