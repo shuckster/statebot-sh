@@ -14,6 +14,12 @@ A small demonstration of [Statebot-sh](https://github.com/shuckster/statebot-sh)
 
 Have a look at the source-code and run it a few times to see how it behaves. :)
 
+Reset it like this:
+
+```sh
+./demo.sh reset
+```
+
 ## License
 
 Promise-like is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
