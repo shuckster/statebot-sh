@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.4] - 2020-06-11
+### Fixed
+- Broke perform_transitions() THEN-callback on last commit
+
+### Added
+- Test for the above issue
+
 ## [2.1.3] - 2020-06-11
 ### Fixed
 - Update version number

@@ -3,7 +3,7 @@
 
 __STATEBOT_INFO__=':
 |
-| STATEBOT-SH 2.1.3
+| STATEBOT-SH 2.1.4
 | - Write more robust and understandable programs.
 |
 | Github repo w/ example usage:
@@ -462,6 +462,8 @@ __statebot_then_stack_push ()
 
 __statebot_then_stack_peek ()
 {
+  local ARRAY_ITEM
+  local NEXT_THEN
   ARRAY_ITEM="__STATEBOT_THEN_FN_$__STATEBOT_THEN_STACK_SIZE__"
   eval "local NEXT_THEN"='$'"$ARRAY_ITEM"
   echo "$NEXT_THEN"
@@ -469,6 +471,7 @@ __statebot_then_stack_peek ()
 
 __statebot_then_stack_clear_topmost ()
 {
+  local ARRAY_ITEM
   ARRAY_ITEM="__STATEBOT_THEN_FN_$__STATEBOT_THEN_STACK_SIZE__"
   eval "$ARRAY_ITEM"=''
 }
@@ -593,7 +596,7 @@ __statebot_change_state_for_event_and_get_handler ()
     info "<eId> Changing state: $TRANSITION"
     PREVIOUS_STATE="$CURRENT_STATE"
     CURRENT_STATE=$(echo "$TRANSITION"|awk 'BEGIN { FS="->" } { print $2 }')
-    __STATEBOT_AFTER_EVENT__=$(echo "$ON_THEN"|awk 'BEGIN { FS=" " } { print $2 }')
+    __STATEBOT_AFTER_EVENT__=$(echo "$ON_THEN"|awk '{ $1=""; sub(/^ */, "", $0); print }')
 
     local STATE_CHANGED=1
     break
