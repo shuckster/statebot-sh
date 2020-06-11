@@ -3,7 +3,7 @@
 
 __STATEBOT_INFO__=':
 |
-| STATEBOT-SH 2.1.4
+| STATEBOT-SH 2.1.5
 | - Write more robust and understandable programs.
 |
 | Github repo w/ example usage:
@@ -465,7 +465,8 @@ __statebot_then_stack_peek ()
   local ARRAY_ITEM
   local NEXT_THEN
   ARRAY_ITEM="__STATEBOT_THEN_FN_$__STATEBOT_THEN_STACK_SIZE__"
-  eval "local NEXT_THEN"='$'"$ARRAY_ITEM"
+  # shellcheck disable=SC2140
+  eval "local NEXT_THEN"="\""'$'"$ARRAY_ITEM""\""
   echo "$NEXT_THEN"
 }
 

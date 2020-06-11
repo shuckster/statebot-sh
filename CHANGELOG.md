@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.5] - 2020-06-11
+### Fixed
+- Fix for some THEN-callbacks not passing all arguments in all shells
+
 ## [2.1.4] - 2020-06-11
 ### Fixed
 - Broke perform_transitions() THEN-callback on last commit
