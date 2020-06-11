@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC1091,SC2219
+# shellcheck disable=SC1091,SC2219,SC2039
 . ./assert.sh
 
 TEST_CHART='
