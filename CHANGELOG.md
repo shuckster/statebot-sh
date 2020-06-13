@@ -6,20 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.1.8] - 2020-06-13
+## [2.1.6 to 2.1.8] - 2020-06-13
 ### Fixed
+- Cloud Connect :: bt-fon plugin required tweaking
 - Cloud Connect :: Remove superfluous imports after refactor
 
-## [2.1.7] - 2020-06-13
 ### Changed
 - Cloud Connect :: Break-out bt-fon helpers + api
 
 ### Added
 - Cloud Connect :: Use the above for new bt-openzone plugin (untested!)
-
-## [2.1.6] - 2020-06-13
-### Fixed
-- Cloud Connect :: bt-fon plugin required tweaking
 
 ## [2.1.5] - 2020-06-11
 ### Fixed
