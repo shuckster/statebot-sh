@@ -31,7 +31,7 @@ on_transitions()
 {
   local THEN=""
 
-  if case_statebot $1 '
+  if case_statebot "$1" '
     idle -> pending -> (rejected | resolved) -> finished
   '
   then

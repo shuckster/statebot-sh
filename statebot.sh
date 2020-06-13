@@ -466,7 +466,7 @@ __statebot_then_stack_peek ()
   local NEXT_THEN
   ARRAY_ITEM="__STATEBOT_THEN_FN_$__STATEBOT_THEN_STACK_SIZE__"
   # shellcheck disable=SC2140
-  eval "local NEXT_THEN"="\""'$'"$ARRAY_ITEM""\""
+  eval "local NEXT_THEN"='"$'"$ARRAY_ITEM"'"'
   echo "$NEXT_THEN"
 }
 

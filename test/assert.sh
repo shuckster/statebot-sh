@@ -3,12 +3,12 @@
 
 if [ "${DISABLE_COLOUR}" != "true" ]
 then
-  NOCOLOUR="\033[0m"
-  ORANGE="\033[0;33m"
-  RED="\033[1;31m"
-  GREEN="\033[1;32m"
-  YELLOW="\033[1;33m"
-  PURPLE='\033[1;35m'
+  NOCOLOUR="\e[0m"
+  ORANGE="\e[0;33m"
+  RED="\e[1;31m"
+  GREEN="\e[1;32m"
+  YELLOW="\e[1;33m"
+  PURPLE='\e[1;35m'
 fi
 
 PREFIX_OKAY="[ ${GREEN}>${NOCOLOUR} ]"
