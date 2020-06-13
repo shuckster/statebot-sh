@@ -19,7 +19,7 @@ PORTAL_LOGIN_URL="https://btwifi.portal.fon.com/remote\
   &LOCATIONNAME=FonBT%3AGB"
 
 # Remove intentation from URL
-PORTAL_LOGIN_URL=${PORTAL_LOGIN_URL// /}
+PORTAL_LOGIN_URL=$(echo "${PORTAL_LOGIN_URL}"|sed -e 's/ //g')
 PORTAL_LOGIN_FORM="USERNAME=${__USERNAME__}&PASSWORD=${__PASSWORD__}"
 
 # Found in the HTML when logged-in
