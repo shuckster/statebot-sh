@@ -4,9 +4,9 @@
 
 Write more robust and understandable programs.
 
-Statebot hopes to make [Finite State Machines](https://en.wikipedia.org/wiki/Finite-state_machine) (FSMs) a little more accessible.
+Statebot hopes to make [Finite State Machines](https://en.wikipedia.org/wiki/Finite-state_machine) (FSMs) a little more accessible by focussing on their organisational benefits in a simplified way.
 
-This is a minimal but useful shell port of the version that runs in [Node and the browser](https://shuckster.github.io/statebot/). It employs a simple caching mechanism with `/tmp/statebots.csv` in order to persist the states of your machines across different runs, and optionally the events too.
+Statebot-sh is a minimal but useful shell port of the version that runs in [Node and the browser](https://shuckster.github.io/statebot/). It employs a simple caching mechanism with `/tmp/statebots.csv` in order to persist the states of your machines across runs, and optionally the events too.
 
 - [Quick Start](#quick-start)
   - [A small example](#a-small-example)
@@ -27,11 +27,9 @@ Download `statebot.sh`:
 curl https://raw.githubusercontent.com/shuckster/statebot-sh/master/statebot.sh > statebot.sh
 ```
 
-Make it executable:
+You don't need to make it executable, but if you do, running it will display an example and the API documentation:
 
 ```sh
-# You don't need to make Statebot executable, but if you do,
-# running it will display an example and the API documentation.
 chmod +x statebot.sh
 ./statebot.sh
 ```
@@ -55,7 +53,8 @@ PROMISE_CHART='
 '
 
 # Implement a "perform_transitions" function to act on events:
-perform_transitions () {
+perform_transitions ()
+{
   local ON=""; local THEN=""
 
   case $1 in
@@ -76,7 +75,8 @@ perform_transitions () {
 }
 
 # Implement an "on_transitions" function to act on transitions:
-on_transitions () {
+on_transitions ()
+{
   local THEN=""
 
   case $1 in
@@ -217,7 +217,8 @@ These should be available before calling `statebot_init()`.
 `perform_transitions()` has the following signature:
 
 ```sh
-perform_transitions () {
+perform_transitions ()
+{
   local ON=""; local THEN=""
 
   # A string in the form `from->to` will be passed-in
@@ -260,7 +261,8 @@ perform_transitions () {
 `on_transitions()` is similar:
 
 ```sh
-on_transitions () {
+on_transitions ()
+{
   local THEN=""
 
   # A string in the form `from->to` will be passed-in
@@ -292,7 +294,7 @@ The JavaScript version of Statebot obviously has a bigger API, but it also allow
 
 ```js
 machine.onTransitions({
-  'resolved | rejected -> done': function () {
+  'resolved | rejected -> done': () => {
     console.log('All finished')
   }
 })
@@ -301,7 +303,8 @@ machine.onTransitions({
 To emulate this in Statebot-sh, the function `case_statebot` is offered:
 
 ```sh
-on_transitions () {
+on_transitions ()
+{
   local THEN=""
 
   if case_statebot $1 '
@@ -322,7 +325,8 @@ Abusing this will manifest as a performance-hit on slow devices, so I recommend 
 For example:
 
 ```sh
-perform_transitions () {
+perform_transitions ()
+{
   local ON=""; local THEN=""
 
   case $1 in
