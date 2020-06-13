@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.6] - 2020-06-13
+### Fixed
+- Cloud Connect :: bt-fon plugin required tweaking
+
 ## [2.1.5] - 2020-06-11
 ### Fixed
 - Fix for some THEN-callbacks not passing all arguments in all shells

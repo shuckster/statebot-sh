@@ -20,10 +20,29 @@ is_logged_in ()
 
 login ()
 {
-  CURL_RESULT=$(curl "$CURL_OPTS" -d "$PORTAL_LOGIN_FORM" "$PORTAL_LOGIN_URL")
-  echo "$CURL_RESULT" > "$FON_PREVIOUS_ATTEMPT"
-  echo "$CURL_RESULT" | grep -q "$PORTAL_LOGIN_SUCCESS_TEXT"
-  return $?
+  # shellcheck disable=SC2086
+  FIRST_TRY=$(curl ${CURL_OPTS} -d "${PORTAL_LOGIN_FORM}" "${PORTAL_LOGIN_URL}")
+  if echo "${FIRST_TRY}"|grep -q "${PORTAL_LOGIN_SUCCESS_TEXT}"
+  then
+    return 0
+  fi
+
+  REFRESH_URL=$(get_meta_refresh_url_from_html "${FIRST_TRY}")
+  if [ "${REFRESH_URL}" = "" ]
+  then
+    echo "${FIRST_TRY}" > "${FON_PREVIOUS_ATTEMPT}"
+    return 1
+  fi
+
+  # shellcheck disable=SC2086
+  REDIRECT_RESULT=$(curl ${CURL_OPTS} "${REFRESH_URL}")
+  if echo "${REDIRECT_RESULT}" | grep -q "${PORTAL_LOGIN_SUCCESS_TEXT}"
+  then
+    return 0
+  fi
+
+  echo "${REDIRECT_RESULT}" > "${FON_PREVIOUS_ATTEMPT}"
+  return 1
 }
 
 is_reboot_allowed ()
@@ -52,6 +71,17 @@ grep_in_url()
 {
   URL="$1"
   shift 1
-  curl "${CURL_OPTS}" "${URL}" --stderr -|grep -q "$@"
+  # shellcheck disable=SC2086
+  curl ${CURL_OPTS} "${URL}" --stderr -|grep -q "$@"
   return $?
+}
+
+get_meta_refresh_url_from_html()
+{
+  echo "$@" | \
+    grep -oi '<meta[^>]*>' | \
+    grep '="refresh"' | \
+    grep -oi 'url=[^"]*' | \
+    cut -d'=' -f2- | \
+    sed -e 's/&amp;/\&/g'
 }

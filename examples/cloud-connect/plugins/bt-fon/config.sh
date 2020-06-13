@@ -6,7 +6,7 @@ FON_SSID="BTWifi-with-FON"
 FON_IFACE="apcli0"
 FON_COOKIES="/tmp/fon_cookies.txt"
 FON_PREVIOUS_ATTEMPT="/tmp/fon_previous_attempt.html"
-FON_REBOOT_LOG="$HOME/fon_reboot_log.txt"
+FON_REBOOT_LOG="${HOME}/fon_reboot_log.txt"
 
 # Current working URLs
 PORTAL_STATUS_URL="https://www.btwifi.com:8443/home"
@@ -18,7 +18,7 @@ PORTAL_LOGIN_URL="https://btwifi.portal.fon.com/remote\
   &VNPNAME=FonBT%3AGB\
   &LOCATIONNAME=FonBT%3AGB"
 
-# Remove intentation from URL
+# Remove indentation from URL above
 PORTAL_LOGIN_URL=$(echo "${PORTAL_LOGIN_URL}"|sed -e 's/ //g')
 PORTAL_LOGIN_FORM="USERNAME=${__USERNAME__}&PASSWORD=${__PASSWORD__}"
 
