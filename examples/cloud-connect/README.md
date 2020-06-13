@@ -27,23 +27,29 @@ Cloud Connect is bundled as a working example for the `Statebot-sh` library, so 
 
 Then just pop Cloud Connect into your `crontab`...
 
+#### `/etc/crontabs/root`
+
 ```sh
 # Every 10th minute, check the connection using the bt-fon plugin
-*/10 * * * * ~/Downloads/statebot/examples/cloud-connect.sh bt-fon check
+*/10 * * * * /opt/statebot/examples/cloud-connect.sh bt-fon check
 ```
 
 ...and maybe your `hotplug.d/iface/` folder, too:
+
+#### `/etc/hotplug.d/iface/99-captive-portal`
 
 ```sh
 #!/bin/sh
 export DEVICE
 export ACTION
-~/Downloads/statebot/examples/cloud-connect/hotplug.sh
+/opt/statebot/examples/cloud-connect/hotplug.sh
 ```
 
 ## Usage
 
 Check the status of it like this:
+
+#### `CLI:`
 
 ```sh
 ./cloud-connect.sh bt-fon
@@ -58,6 +64,8 @@ Checking Wifi connected to: BTWifi-with-FON
 ```
 
 You can also `pause` Cloud Connect without needing to remove it from crontab or hotplug:
+
+#### `CLI:`
 
 ```sh
 ./cloud-connect.sh bt-fon pause # or resume
@@ -88,32 +96,37 @@ Here's what a plugin looks like:
 # . "${PLUGIN_PATH}/.secrets"
 # . "${PLUGIN_PATH}/config.sh"
 
-is_valid_network () {
+is_valid_network ()
+{
   log "Are we on the right network to do this?"
   return 0 # Non-zero here means "nope!"
 }
 
-is_logged_in () {
+is_logged_in ()
+{
   # Just ping Google for this demo...
   ping -t 3 google.com
   return $? # Non-zero here means an error occurred
 }
 
-login () {
+login ()
+{
   sleep 3
   return 0 # Non-zero here means an error occurred
 }
 
-is_reboot_allowed () {
+is_reboot_allowed ()
+{
   return 1 # Non-zero here means "nope!"
 }
 
-report_online_status () {
+report_online_status ()
+{
   echo "Maybe POST to a URL so you can graph your connection-status!"
 }
 ```
 
-Have a look in `plugins/` to see this example and one that works for BT Fon, too.
+Have a look in `plugins/` to see this example and another that works for BT Fon & OpenZone, too.
 
 ## License
 
