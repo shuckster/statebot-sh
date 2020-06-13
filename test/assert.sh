@@ -44,6 +44,14 @@ assert_ne()
   fi
 }
 
+assert_list_eq ()
+{
+  SOURCE_LIST=$(echo "$1"|sort)
+  TEST_LIST=$(echo "$2"|sort)
+  DESCRIPTION="$3"
+  assert_eq "${SOURCE_LIST}" "${TEST_LIST}" "${DESCRIPTION}"
+}
+
 assert_describe()
 {
   if [ "${ONE_ASSERTION_FAILED}" = "0" ]
