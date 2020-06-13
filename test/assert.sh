@@ -46,10 +46,11 @@ assert_ne()
 
 assert_list_eq ()
 {
-  SOURCE_LIST=$(echo "$1"|sort)
-  TEST_LIST=$(echo "$2"|sort)
-  DESCRIPTION="$3"
-  assert_eq "${SOURCE_LIST}" "${TEST_LIST}" "${DESCRIPTION}"
+  local source_list test_list description
+  source_list=$(echo "$1"|sort)
+  test_list=$(echo "$2"|sort)
+  description="$3"
+  assert_eq "${source_list}" "${test_list}" "${description}"
 }
 
 assert_describe()

@@ -82,32 +82,44 @@ sb_init ()
 
 sb_init
 statebot_reset
-assert_eq "${CURRENT_STATE}" "idle" "First state is 'idle'"
+assert_eq "${CURRENT_STATE}" "idle" \
+  "First state is 'idle'"
 
 statebot_emit "next" persist
-assert_eq "${CURRENT_STATE}" "idle" "First state is still 'idle'"
+assert_eq "${CURRENT_STATE}" "idle" \
+  "First state is still 'idle'"
 
 sb_init
-assert_eq "${CURRENT_STATE}" "first" "Persisted event emitted on init: we should be in 'first' now"
+assert_eq "${CURRENT_STATE}" "first" \
+  "Persisted event emitted on init: we should be in 'first' now"
 
 statebot_emit "next" persist
-assert_eq "${CURRENT_STATE}" "first" "Should still be in 'first' after second persisted emit"
+assert_eq "${CURRENT_STATE}" "first" \
+  "Should still be in 'first' after second persisted emit"
 
 sb_init
-assert_eq "${CURRENT_STATE}" "second" "Persisted event emitted on init: we should be in 'second' now"
+assert_eq "${CURRENT_STATE}" "second" \
+  "Persisted event emitted on init: we should be in 'second' now"
 
 statebot_emit "next"
-assert_eq "${CURRENT_STATE}" "third" "Next state is 'third'"
+assert_eq "${CURRENT_STATE}" "third" \
+  "Next state is 'third'"
 
 statebot_emit "next"
-assert_eq "${CURRENT_STATE}" "last" "Final state is 'last'"
-assert_eq "${perf_callback_count}" "${perf_expected_callback_count}" "perform_transitions() THEN-callbacks should have run ${perf_expected_callback_count} times"
-assert_eq "${on_callback_count}" "${on_expected_callback_count}" "on_transitions() THEN-callbacks should have run ${on_expected_callback_count} times"
+assert_eq "${CURRENT_STATE}" "last" \
+  "Final state is 'last'"
+assert_eq "${perf_callback_count}" "${perf_expected_callback_count}" \
+  "perform_transitions() THEN-callbacks should have run ${perf_expected_callback_count} times"
+assert_eq "${on_callback_count}" "${on_expected_callback_count}" \
+  "on_transitions() THEN-callbacks should have run ${on_expected_callback_count} times"
 
 statebot_emit "next"
-assert_eq "${CURRENT_STATE}" "last" "Final state is still 'last'"
-assert_eq "${perf_callback_count}" "${perf_expected_callback_count}" "perform_transitions() THEN-callbacks should still have run ${perf_expected_callback_count} times"
-assert_eq "${on_callback_count}" "${on_expected_callback_count}" "on_transitions() THEN-callbacks should still have run ${on_expected_callback_count} times"
+assert_eq "${CURRENT_STATE}" "last" \
+  "Final state is still 'last'"
+assert_eq "${perf_callback_count}" "${perf_expected_callback_count}" \
+  "perform_transitions() THEN-callbacks should still have run ${perf_expected_callback_count} times"
+assert_eq "${on_callback_count}" "${on_expected_callback_count}" \
+  "on_transitions() THEN-callbacks should still have run ${on_expected_callback_count} times"
 
 assert_describe "Can 'statebot_emit' a single common event to move through states"
 exit $?

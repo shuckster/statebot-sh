@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC1091,SC2219
+# shellcheck disable=SC1091,SC2219,SC2039
 . ./assert.sh
 
 CHART_1='
@@ -48,12 +48,17 @@ finished'
 
 run_test_against_chart ()
 {
-  CHART_NAME="$1"
-  CHART="$2"
-  TEST_TRANSITIONS=$(decompose_chart "${CHART}")
-  TEST_STATES=$(decompose_transitions "${TEST_TRANSITIONS}")
-  assert_list_eq "${TEST_TRANSITIONS}" "${CHART_TRANSITIONS}" "${CHART_NAME} :: Transitions match test"
-  assert_list_eq "${TEST_STATES}" "${CHART_STATES}" "${CHART_NAME} :: States match test"
+  local chart_name chart test_transitions test_states
+
+  chart_name="$1"
+  chart="$2"
+  test_transitions=$(decompose_chart "${chart}")
+  test_states=$(decompose_transitions "${test_transitions}")
+
+  assert_list_eq "${test_transitions}" "${CHART_TRANSITIONS}" \
+    "${chart_name} :: Transitions match test"
+  assert_list_eq "${test_states}" "${CHART_STATES}" \
+    "${chart_name} :: States match test"
 }
 
 run_test_against_chart "CHART_1" "${CHART_1}"

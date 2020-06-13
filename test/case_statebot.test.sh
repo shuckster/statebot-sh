@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC1091,SC2219
+# shellcheck disable=SC1091,SC2219,SC2039
 . ./assert.sh
 
 TEST_CHART='
@@ -44,7 +44,8 @@ STATEBOT_LOG_LEVEL=0
 
 statebot_init "case_statebot" "idle" "" "${TEST_CHART}"
 statebot_reset
-assert_eq "${CURRENT_STATE}" "idle" "First state is 'idle'"
+assert_eq "${CURRENT_STATE}" "idle" \
+  "First state is 'idle'"
 
 statebot_enter "first"
 assert_eq "${CURRENT_STATE}" "first" "idle->first"
@@ -57,15 +58,20 @@ assert_eq "${CURRENT_STATE}" "third" "second->third"
 
 statebot_enter "last"
 assert_eq "${CURRENT_STATE}" "last" "third->last"
-assert_eq "${callback_count}" "${expected_callback_count}" "THEN-callbacks should have run ${expected_callback_count} times"
+assert_eq "${callback_count}" "${expected_callback_count}" \
+  "THEN-callbacks should have run ${expected_callback_count} times"
 
 statebot_enter "last"
-assert_eq "${callback_count}" "${expected_callback_count}" "THEN-callbacks should still have run ${expected_callback_count} times"
+assert_eq "${callback_count}" "${expected_callback_count}" \
+  "THEN-callbacks should still have run ${expected_callback_count} times"
 
 statebot_enter "first"
-assert_eq "${CURRENT_STATE}" "last" "Tried to enter 'first', should stay on 'last'"
-assert_eq "${PREVIOUS_STATE}" "third" "Previous state is still 'third'"
-assert_eq "${callback_count}" "${expected_callback_count}" "THEN-callbacks should still really have run ${expected_callback_count} times"
+assert_eq "${CURRENT_STATE}" "last" \
+  "Tried to enter 'first', should stay on 'last'"
+assert_eq "${PREVIOUS_STATE}" "third" \
+  "Previous state is still 'third'"
+assert_eq "${callback_count}" "${expected_callback_count}" \
+  "THEN-callbacks should still really have run ${expected_callback_count} times"
 
 assert_describe "'case_statebot' does the right thing"
 exit $?
