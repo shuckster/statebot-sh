@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 is_valid_network ()
 {
@@ -25,26 +26,28 @@ report_online_status ()
 
 login ()
 {
-  FIRST_TRY=$(post_data_to_url "${BT_LOGIN_FORM}" "${BT_LOGIN_URL}" "${BT_CURL_OPTS}")
-  if grep_in_text "${FIRST_TRY}" "${BT_LOGIN_SUCCESS_TEXT}"
+  local first_try refresh_url redirect_result
+
+  first_try=$(post_data_to_url "${BT_LOGIN_FORM}" "${BT_LOGIN_URL}" "${BT_CURL_OPTS}")
+  if grep_in_text "${first_try}" "${BT_LOGIN_SUCCESS_TEXT}"
   then
     return 0
   fi
 
-  REFRESH_URL=$(get_meta_refresh_url_from_html "${FIRST_TRY}")
-  if [ "${REFRESH_URL}" = "" ]
+  refresh_url=$(get_meta_refresh_url_from_html "${first_try}")
+  if [ "${refresh_url}" = "" ]
   then
-    echo "${FIRST_TRY}" > "${BT_PREVIOUS_ATTEMPT}"
+    echo "${first_try}" > "${BT_PREVIOUS_ATTEMPT}"
     return 1
   fi
 
   # shellcheck disable=SC2086
-  REDIRECT_RESULT=$(curl ${BT_CURL_OPTS} "${REFRESH_URL}")
-  if grep_in_text "${REDIRECT_RESULT}" "${BT_LOGIN_SUCCESS_TEXT}"
+  redirect_result=$(curl ${BT_CURL_OPTS} "${refresh_url}")
+  if grep_in_text "${redirect_result}" "${BT_LOGIN_SUCCESS_TEXT}"
   then
     return 0
   fi
 
-  echo "${REDIRECT_RESULT}" > "${BT_PREVIOUS_ATTEMPT}"
+  echo "${redirect_result}" > "${BT_PREVIOUS_ATTEMPT}"
   return 1
 }

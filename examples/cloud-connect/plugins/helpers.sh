@@ -1,45 +1,55 @@
 #!/bin/sh
-# shellcheck disable=SC1090
+# shellcheck disable=SC1090,SC2039
 
 iface_connected_to_ssid()
 {
-  IFACE="$1"
-  SSID="$2"
-  iwinfo "${IFACE}" info|grep -q "${SSID}"
+  local iface ssid
+
+  iface="$1"
+  ssid="$2"
+  iwinfo "${iface}" info|grep -q "${ssid}"
 }
 
 silently_get_url()
 {
-  URL="$*"
-  curl --max-time 10 --silent --output /dev/null "${URL}"
+  local url
+
+  url="$*"
+  curl --max-time 10 --silent --output /dev/null "${url}"
 }
 
 grep_in_url()
 {
-  URL="$1"
-  TEXT="$2"
+  local url text rest_opts
+
+  url="$1"
+  text="$2"
   shift 2
-  REST_OPTS="$*"
+  rest_opts="$*"
   # shellcheck disable=SC2086
-  curl ${REST_OPTS} "${URL}" --stderr -|grep -q "${TEXT}"
+  curl ${rest_opts} "${url}" --stderr -|grep -q "${text}"
 }
 
 grep_in_text()
 {
-  HAYSTACK="$1"
+  local needle haystack
+
+  haystack="$1"
   shift 1
-  NEEDLE="$*"
-  echo "${HAYSTACK}"|grep -q "${NEEDLE}"
+  needle="$*"
+  echo "${haystack}"|grep -q "${needle}"
 }
 
 post_data_to_url()
 {
-  DATA="$1"
-  URL="$2"
+  local data url rest_opts
+
+  data="$1"
+  url="$2"
   shift 2
-  REST_OPTS="$*"
+  rest_opts="$*"
   # shellcheck disable=SC2086
-  curl ${REST_OPTS} -d "${DATA}" "${URL}"
+  curl ${rest_opts} -d "${data}" "${url}"
 }
 
 get_meta_refresh_url_from_html()
