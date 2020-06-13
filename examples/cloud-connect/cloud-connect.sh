@@ -29,16 +29,16 @@ CLOUD_CONNECT_CHART='
 cd "${0%/*}" || exit 255
 PLUGIN_INFO=$(./load-plugins.sh "$@")
 PLUGIN_EXIT=$?
-PLUGIN_NAME=$(echo "$PLUGIN_INFO" | awk '{ print $1 }')
-PLUGIN_PATH=$(echo "$PLUGIN_INFO" | awk '{ print $2 }')
-PLUGIN_API=$(echo "$PLUGIN_INFO" | awk '{ print $3 }')
-EVENT=$(echo "$PLUGIN_INFO" | awk '{ print $4 }')
+PLUGIN_NAME=$(echo "${PLUGIN_INFO}"|awk '{ print $1 }')
+PLUGIN_PATH=$(echo "${PLUGIN_INFO}"|awk '{ print $2 }')
+PLUGIN_API=$(echo "${PLUGIN_INFO}"|awk '{ print $3 }')
+EVENT=$(echo "${PLUGIN_INFO}"|awk '{ print $4 }')
 case $PLUGIN_EXIT in
   1)
-    echo "Specified plugin: [$PLUGIN_NAME]"
+    echo "Specified plugin: [${PLUGIN_NAME}]"
   ;;
   2)
-    echo "Just one plugin, defaulting to it: [$PLUGIN_NAME]"
+    echo "Just one plugin, defaulting to it: [${PLUGIN_NAME}]"
   ;;
   *)
     echo "$PLUGIN_INFO"
@@ -55,11 +55,11 @@ for FN_NAME in ${REQUIRED_FUNCTIONS}
 do
   if ! type "$FN_NAME" 2>&1|grep -q 'function'
   then
-    echo "Plugin does not have a required function: $FN_NAME()"
+    echo "Plugin does not have a required function: ${FN_NAME}()"
     VALID_PLUGIN=0
   fi
 done
-if [ "$VALID_PLUGIN" -eq 0 ]
+if [ "${VALID_PLUGIN}" -eq 0 ]
 then
   exit 1
 fi
@@ -144,7 +144,7 @@ perform_transitions ()
     ;;
   esac
 
-  echo $ON $THEN
+  echo ${ON} ${THEN}
 }
 
 #
@@ -199,33 +199,33 @@ log_failure ()
 
 load_fail_count_for_this_session ()
 {
-  if [ -f "$CLOUD_CONNECT_ERRORS" ]
+  if [ -f "${CLOUD_CONNECT_ERRORS}" ]
   then
-    FAILURE_COUNT=$(cat "$CLOUD_CONNECT_ERRORS")
+    FAILURE_COUNT=$(cat "${CLOUD_CONNECT_ERRORS}")
   fi
 }
 
 bump_fail_count_for_this_session ()
 {
   : $((FAILURE_COUNT+=1))
-  echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
-  warn "Failure count: $FAILURE_COUNT"
+  echo "${FAILURE_COUNT}" > "${CLOUD_CONNECT_ERRORS}"
+  warn "Failure count: ${FAILURE_COUNT}"
 }
 
 unbump_fail_count_for_this_session ()
 {
   : $((FAILURE_COUNT-=1))
-  if [ "$FAILURE_COUNT" -lt 0 ]
+  if [ "${FAILURE_COUNT}" -lt 0 ]
   then
     FAILURE_COUNT=0
   fi
-  echo "$FAILURE_COUNT" > "$CLOUD_CONNECT_ERRORS"
-  log "Failure count: $FAILURE_COUNT"
+  echo "${FAILURE_COUNT}" > "${CLOUD_CONNECT_ERRORS}"
+  log "Failure count: ${FAILURE_COUNT}"
 }
 
 we_have_failed_enough_to_try_a_reboot ()
 {
-  if [ $FAILURE_COUNT -ge $FAILURE_LIMIT ]
+  if [ ${FAILURE_COUNT} -ge ${FAILURE_LIMIT} ]
   then
     return 0
   fi
@@ -262,7 +262,7 @@ load_fail_count_for_this_session
 statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
 
 # Emit events from the command-line
-if [ "$EVENT" != "" ]
+if [ "${EVENT}" != "" ]
 then
-  statebot_emit "$EVENT"
+  statebot_emit "${EVENT}"
 fi

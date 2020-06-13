@@ -6,15 +6,15 @@
 
 is_valid_network ()
 {
-  log "Checking Wifi connected to: $FON_SSID"
-  grep_ssid "$FON_SSID"
+  log "Checking Wifi connected to: ${FON_SSID}"
+  grep_ssid "${FON_SSID}"
   return $?
 }
 
 is_logged_in ()
 {
   log "Checking Captive Portal status..."
-  grep_in_url "$PORTAL_STATUS_URL" "$PORTAL_STATUS_TEXT"
+  grep_in_url "${PORTAL_STATUS_URL}" "${PORTAL_STATUS_TEXT}"
   return $?
 }
 
@@ -28,7 +28,7 @@ login ()
 
 is_reboot_allowed ()
 {
-  echo "$(date) :: Rebooting!" >> "$FON_REBOOT_LOG"
+  echo "$(date) :: Rebooting!" >> "${FON_REBOOT_LOG}"
   return 0
 }
 
@@ -44,7 +44,7 @@ report_online_status ()
 grep_ssid()
 {
   TEST_SSID="$*"
-  iwinfo "$FON_IFACE" info | grep -q "$TEST_SSID"
+  iwinfo "${FON_IFACE}" info|grep -q "${TEST_SSID}"
   return $?
 }
 
@@ -52,6 +52,6 @@ grep_in_url()
 {
   URL="$1"
   shift 1
-  curl "$CURL_OPTS" "$URL" --stderr - | grep -q "$@"
+  curl "${CURL_OPTS}" "${URL}" --stderr -|grep -q "$@"
   return $?
 }

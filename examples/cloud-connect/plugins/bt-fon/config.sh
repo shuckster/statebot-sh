@@ -24,12 +24,12 @@ PORTAL_LOGIN_FORM="USERNAME=${__USERNAME__}&PASSWORD=${__PASSWORD__}"
 
 # Found in the HTML when logged-in
 PORTAL_STATUS_TEXT="now logged on"
-PORTAL_LOGIN_SUCCESS_TEXT="$PORTAL_STATUS_TEXT"
+PORTAL_LOGIN_SUCCESS_TEXT="${PORTAL_STATUS_TEXT}"
 
 CURL_OPTS="\
   -L \
   --verbose \
   --max-time 60 \
-  --interface $FON_IFACE \
-  --cookie-jar $FON_COOKIES \
-  --cookie $FON_COOKIES"
+  --interface ${FON_IFACE} \
+  --cookie-jar ${FON_COOKIES} \
+  --cookie ${FON_COOKIES}"
