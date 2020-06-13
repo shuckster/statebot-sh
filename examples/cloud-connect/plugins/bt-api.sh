@@ -1,9 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC1090
-
-. "${PLUGIN_PATH}/.secrets"
-. "${PLUGIN_PATH}/config.sh"
-. "${PLUGIN_PATH}/../helpers.sh"
 
 is_valid_network ()
 {
