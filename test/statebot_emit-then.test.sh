@@ -52,7 +52,7 @@ cd "${0%/*}" || exit 255
 STATEBOT_LOG_LEVEL=0
 . ../statebot.sh
 
-statebot_init "then_statebot_emit" "idle" "" "${TEST_CHART}"
+statebot_init "statebot_emit-then" "idle" "" "${TEST_CHART}"
 statebot_reset
 assert_eq "${CURRENT_STATE}" "idle" "First state is 'idle'"
 

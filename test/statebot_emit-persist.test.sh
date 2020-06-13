@@ -77,7 +77,7 @@ STATEBOT_LOG_LEVEL=0
 
 sb_init ()
 {
-  statebot_init "persist_statebot_emit" "idle" "" "${TEST_CHART}"
+  statebot_init "statebot_emit-persist" "idle" "" "${TEST_CHART}"
 }
 
 sb_init
