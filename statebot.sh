@@ -440,8 +440,10 @@ decompose_transitions ()
         out[data[i]] = i
       }
       # De-dupe + sort: 3/3
-      for (i = 1; i <= count; i++) {
-        print out[i]
+      for (i = 0; i < count; i++) {
+        if (out[i]) {
+          print out[i]
+        }
       }
     }
   '
