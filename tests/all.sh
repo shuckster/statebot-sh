@@ -2,7 +2,7 @@
 # shellcheck disable=SC2181,SC1091,SC2039,SC2059
 cd "${0%/*}" || exit 255
 [ ! -t 1 ] && export DISABLE_COLOUR="true"
-. ./assert.sh
+. ./_assert.sh
 
 TESTS=$(ls ./*.test.sh)
 failing_tests=0

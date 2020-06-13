@@ -1,6 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2034,SC1091,SC2039
-. ./assert.sh
+. ./_assert.sh
 
 TEST_CHART='
   idle -> pending -> (rejected | resolved) -> finished
