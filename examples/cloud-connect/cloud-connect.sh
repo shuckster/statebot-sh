@@ -69,8 +69,16 @@ fi
 # IMPORT STATEBOT
 #
 
-STATEBOT_LOG_LEVEL=4
-STATEBOT_USE_LOGGER=0
+if [ "${STATEBOT_LOG_LEVEL}" = "" ]
+then
+  STATEBOT_LOG_LEVEL=4
+fi
+
+if [ "${STATEBOT_USE_LOGGER}" = "" ]
+then
+  STATEBOT_USE_LOGGER=0
+fi
+
 # shellcheck disable=SC1091
 . ../../statebot.sh
 
