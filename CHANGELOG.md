@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2020-06-14
+### Added
+- Cloud Connect :: Allow 'export' overrides
+- Cloud Connect :: 'rebooting' state
+
 ## [2.2.2] - 2020-06-14
 ### Added
 - Cloud Connect :: Add credits
