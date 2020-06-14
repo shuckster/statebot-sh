@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC2219,SC2034,SC1090,SC1091,SC2039
+# shellcheck disable=SC2034,SC2039
 
 CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
 FAILURE_LIMIT=20
@@ -41,12 +41,13 @@ case $PLUGIN_EXIT in
     echo "Just one plugin, defaulting to it: [${PLUGIN_NAME}]"
   ;;
   *)
-    echo "$PLUGIN_INFO"
+    echo "${PLUGIN_INFO}"
     exit 1
   ;;
 esac
-echo "Loading plugin: $PLUGIN_API"
-. "$PLUGIN_API"
+echo "Loading plugin: ${PLUGIN_API}"
+# shellcheck disable=SC1090
+. "${PLUGIN_API}"
 
 # Check that the right functions are available
 VALID_PLUGIN=1
@@ -70,11 +71,8 @@ fi
 
 STATEBOT_LOG_LEVEL=4
 STATEBOT_USE_LOGGER=0
+# shellcheck disable=SC1091
 . ../../statebot.sh
-
-#
-# CHECK WE'RE ON A VALID NETWORK
-#
 
 if ! is_valid_network
 then
@@ -144,7 +142,7 @@ perform_transitions ()
     ;;
   esac
 
-  echo ${ON} ${THEN}
+  echo ${ON} "${THEN}"
 }
 
 #
