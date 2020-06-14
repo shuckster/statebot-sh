@@ -164,7 +164,6 @@ attempt_login ()
   warn "Not logged-in, trying..."
   if login
   then
-    online_action
     statebot_emit connected
   else
     statebot_emit failed
