@@ -1,6 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+# The functions called here will be imported
+# from `helpers.sh` during runtime, so check
+# out that file for their definitions
+
 is_valid_network ()
 {
   log "Checking Wifi connected to: ${BT_SSID}"
