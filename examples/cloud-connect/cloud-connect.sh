@@ -11,7 +11,7 @@ CLOUD_CONNECT_CHART='
 
   pinging -> (online | offline) -> pinging
   offline -> logging-in -> (online | failure)
-  failure -> offline
+  failure -> (offline | rebooting)
 
   // Go directly to [offline] on Hotplug "ifdown"
   online -> offline
@@ -120,6 +120,9 @@ perform_transitions ()
       ON="disconnected"
       THEN="offline_message"
     ;;
+    'failure->rebooting')
+      ON="rebooting"
+    ;;
 
     # hotplug ifdown
     'online->offline')
@@ -186,8 +189,12 @@ log_failure ()
 {
   error "Could not login :("
   bump_fail_count_for_this_session
-  try_a_reboot_if_necessary
-  statebot_emit disconnected
+  if try_a_reboot_if_necessary
+  then
+    statebot_emit rebooting
+  else
+    statebot_emit disconnected
+  fi
 }
 
 #
