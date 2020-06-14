@@ -3,16 +3,16 @@
 
 # [UNTESTED!]
 
+# URL/form info based on @SpikeTheLobster's
+# comment over on this Gist:
+# - https://gist.github.com/sscarduzio/05ed0b41d6234530d724#gistcomment-3336485
+
 # Network
 BT_SSID="BT-Wifi"
 BT_IFACE="apcli0"
 BT_COOKIES="/tmp/bt_cookies.txt"
 BT_PREVIOUS_ATTEMPT="/tmp/bt_previous_attempt.html"
 BT_REBOOT_LOG="${HOME}/bt_reboot_log.txt"
-
-# URL/form info based on SpikeTheLobster's
-# comment over on this Gist:
-# - https://gist.github.com/sscarduzio/05ed0b41d6234530d724#gistcomment-3336485
 
 # Portal status + login URLs
 BT_STATUS_URL="https://www.btopenzone.com:8443/home"

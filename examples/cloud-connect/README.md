@@ -128,6 +128,11 @@ report_online_status ()
 
 Have a look in `plugins/` to see this example and another that works for BT Fon & OpenZone, too.
 
+## Credit
+
+Props to [sscarduzio and other commenters in his Gist](https://gist.github.com/sscarduzio/05ed0b41d6234530d724) for starting me down this rabbit-hole, and [SpikeTheLobster](https://gist.github.com/sscarduzio/05ed0b41d6234530d724#gistcomment-3336485) for the BT OpenZone config settings.
+
+
 ## License
 
 Cloud Connect is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
