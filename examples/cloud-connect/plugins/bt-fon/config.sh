@@ -19,7 +19,7 @@ BT_LOGIN_URL="https://btwifi.portal.fon.com/remote\
   &LOCATIONNAME=FonBT%3AGB"
 
 # Remove indentation from URL above
-BT_LOGIN_URL=$(echo "${BT_LOGIN_URL}"|sed -e 's/ //g')
+BT_LOGIN_URL=$(echo "${BT_LOGIN_URL}"|sed -e 's/  //g')
 BT_LOGIN_FORM="USERNAME=${__USERNAME__}&PASSWORD=${__PASSWORD__}"
 
 # Found in the HTML when logged-in
