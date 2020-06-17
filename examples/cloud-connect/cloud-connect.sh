@@ -237,7 +237,7 @@ unbump_fail_count_for_this_session ()
 
 we_have_failed_enough_to_try_a_reboot ()
 {
-  if [ ${FAILURE_COUNT} -ge ${FAILURE_LIMIT} ]
+  if [ "${FAILURE_COUNT}" -ge "${FAILURE_LIMIT}" ]
   then
     return 0
   fi

@@ -17,7 +17,7 @@ do
   fi
 done
 
-if [ "$failing_tests" -eq 0 ]
+if [ "${failing_tests}" -eq 0 ]
 then
   echo ":"
 printf "| ${PREFIX_ALL_OKAY} All tests passed!\n"
