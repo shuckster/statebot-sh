@@ -6,7 +6,7 @@
 
   pinging -> (online | offline) -> pinging
   offline -> logging-in -> (online | failure)
-  failure -> offline
+  failure -> (offline | rebooting)
 
   // Go directly to [offline] on Hotplug "ifdown"
   online -> offline
