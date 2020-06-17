@@ -2,4 +2,5 @@
 .secrets
 *.tar
 *.gz
-._*
+._*.png
+publish.sh
