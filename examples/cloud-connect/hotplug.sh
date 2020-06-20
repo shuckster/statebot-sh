@@ -19,11 +19,11 @@ cd "${0%/*}" || exit 255
 
 if [ "${ACTION}" = "ifdown" ]
 then
-  ./cloud-connect.sh bt-fon ifdown
+  ./cloud-connect.sh bt-wifi ifdown
 fi
 
 if [ "${ACTION}" = "ifup" ]
 then
   sleep 5
-  ./cloud-connect.sh bt-fon check
+  ./cloud-connect.sh bt-wifi check
 fi

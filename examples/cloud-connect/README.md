@@ -19,7 +19,9 @@
 
 This is a shell-script that helps automate connecting to public wifi hotspots that sit behind a captive-portal (ie; the ones where you need an account.)
 
-It works using `plugins/`, and two are bundled: An example that demonstrates how to write a plugin, and another that works with `BTWifi-with-FON` hotspots (so long as you have a valid and active account! :)
+It works using `plugins/`, and two are bundled: An example that demonstrates how to write a plugin, and three that work with `BTWi-fi` hotspots for Broadband, Business, and public Wi-fi (so long as you have a valid and active account! :)
+
+BT used to support FON accounts, but since the [18th of June 2020](plugins/bt-wifi-with-fon/README.md) this is no longer the case. The FON plugin has been left for reference.
 
 ## Installation
 
@@ -30,8 +32,8 @@ Then just pop Cloud Connect into your `crontab`...
 #### `/etc/crontabs/root`
 
 ```sh
-# Every 10th minute, check the connection using the bt-fon plugin
-*/10 * * * * /opt/statebot/examples/cloud-connect.sh bt-fon check
+# Every 10th minute, check the connection using the bt-wifi plugin
+*/10 * * * * /opt/statebot/examples/cloud-connect.sh bt-wifi check
 ```
 
 ...and maybe your `hotplug.d/iface/` folder, too:
@@ -52,11 +54,11 @@ Check the status of it like this:
 #### `CLI:`
 
 ```sh
-./cloud-connect.sh bt-fon
+./cloud-connect.sh bt-wifi
 
-Specified plugin: [bt-fon]
-Loading plugin: ./plugins/bt-fon/api.sh
-Checking Wifi connected to: BTWifi-with-FON
+Specified plugin: [bt-wifi]
+Loading plugin: ./plugins/bt-wifi/api.sh
+Checking Wifi connected to: BTWi-fi
 . :
 | |  Statebot :: cloud-connect
 | |  Current state: [online]
@@ -68,11 +70,11 @@ You can also `pause` Cloud Connect without needing to remove it from crontab or 
 #### `CLI:`
 
 ```sh
-./cloud-connect.sh bt-fon pause # or resume
+./cloud-connect.sh bt-wifi pause # or resume
 
-Specified plugin: [bt-fon]
-Loading plugin: ./plugins/bt-fon/api.sh
-Checking Wifi connected to: BTWifi-with-FON
+Specified plugin: [bt-wifi]
+Loading plugin: ./plugins/bt-wifi/api.sh
+Checking Wifi connected to: BTWi-fi
 . :
 | |  Statebot :: cloud-connect
 | |  Current state: [online]

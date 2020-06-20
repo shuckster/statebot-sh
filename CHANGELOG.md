@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.4] - 2020-06-20
+### Changed
+- Cloud Connect :: FON plugin now defunct
+
+### Added
+- Cloud Connect :: Added 3 other plugins for BTWi-fi
+
 ## [2.2.3] - 2020-06-14
 ### Added
 - Cloud Connect :: Allow 'export' overrides
