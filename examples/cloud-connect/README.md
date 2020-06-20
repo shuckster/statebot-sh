@@ -19,7 +19,7 @@
 
 This is a shell-script that helps automate connecting to public wifi hotspots that sit behind a captive-portal (ie; the ones where you need an account.)
 
-It works using `plugins/`, and two are bundled: An example that demonstrates how to write a plugin, and three that work with `BTWi-fi` hotspots for Broadband, Business, and public Wi-fi (so long as you have a valid and active account! :)
+It works using `plugins/`, and several are bundled: An example that demonstrates how to write a plugin, and three that work with `BTWi-fi` hotspots for Broadband, Business, and public Wi-fi (so long as you have a valid and active account! :)
 
 BT used to support FON accounts, but since the [18th of June 2020](plugins/bt-wifi-with-fon/README.md) this is no longer the case. The FON plugin has been left for reference.
 
