@@ -1,8 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
-# [ ! UNTESTED ! ]
-
 # Network
 BT_SSID="BTWi-fi"
 BT_IFACE="apcli0"
