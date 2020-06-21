@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034
 
 # Network
-BT_SSID="BTWi-fi"
+BT_SSID="BTWi-fi\|BTWifi-with-FON"
 BT_IFACE="apcli0"
 BT_COOKIES="/tmp/bt_cookies.txt"
 BT_PREVIOUS_ATTEMPT="/tmp/bt_previous_attempt.html"
