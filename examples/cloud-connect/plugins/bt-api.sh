@@ -38,6 +38,7 @@ login ()
     return 0
   fi
 
+  info "Checking for login redirection..."
   refresh_url=$(get_meta_refresh_url_from_html "${first_try}")
   if [ "${refresh_url}" = "" ]
   then
@@ -52,6 +53,7 @@ login ()
     return 0
   fi
 
+  warn "Could not determine if login was successful"
   echo "${redirect_result}" > "${BT_PREVIOUS_ATTEMPT}"
   return 1
 }
