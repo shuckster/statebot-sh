@@ -379,4 +379,4 @@ Statebot-sh was written by [Conan Theobald](https://github.com/shuckster/).
 
 ## License
 
-Statebot-sh is [ISC licensed](./LICENSE).
+Statebot-sh is [MIT licensed](./LICENSE).

@@ -133,6 +133,6 @@ Rerun stores its output in `/tmp/rerun-failures.txt`. This file is copied into `
 
 ## License
 
-Rerun is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+Rerun is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [MIT licensed](https://github.com/shuckster/statebot-sh/blob/master/LICENSE).
 
 <img src="../../logo-small.png" width="75" />

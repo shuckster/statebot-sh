@@ -137,6 +137,6 @@ Props to [sscarduzio and other commenters in his Gist](https://gist.github.com/s
 
 ## License
 
-Cloud Connect is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+Cloud Connect is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [MIT licensed](https://github.com/shuckster/statebot-sh/blob/master/LICENSE).
 
 <img src="../../logo-small.png" width="75" />

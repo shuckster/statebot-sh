@@ -13,7 +13,7 @@ __STATEBOT_INFO__=':
 | - https://github.com/shuckster/statebot
 |
 |
-| Written by Conan Theobald and ISC licensed.
+| Written by Conan Theobald and MIT licensed.
 |_____________________________________________ _ _ _  _  _
 '
 

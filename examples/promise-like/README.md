@@ -22,6 +22,6 @@ Reset it like this:
 
 ## License
 
-Promise-like is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [ISC licensed](./LICENSE).
+Promise-like is bundled with [Statebot-sh](https://github.com/shuckster/statebot-sh/) and both are [MIT licensed](https://github.com/shuckster/statebot-sh/blob/master/LICENSE).
 
 <img src="../../logo-small.png" width="75" />
