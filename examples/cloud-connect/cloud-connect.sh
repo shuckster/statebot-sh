@@ -22,142 +22,76 @@ CLOUD_CONNECT_CHART='
 
 '
 
-#
-# PLUGINS
-#
-
-cd "${0%/*}" || exit 255
-PLUGIN_INFO=$(./load-plugins.sh "$@")
-PLUGIN_EXIT=$?
-PLUGIN_NAME=$(echo "${PLUGIN_INFO}"|awk '{ print $1 }')
-PLUGIN_PATH=$(echo "${PLUGIN_INFO}"|awk '{ print $2 }')
-PLUGIN_API=$(echo "${PLUGIN_INFO}"|awk '{ print $3 }')
-EVENT=$(echo "${PLUGIN_INFO}"|awk '{ print $4 }')
-case $PLUGIN_EXIT in
-  1)
-    echo "Specified plugin: [${PLUGIN_NAME}]"
-  ;;
-  2)
-    echo "Just one plugin, defaulting to it: [${PLUGIN_NAME}]"
-  ;;
-  *)
-    echo "${PLUGIN_INFO}"
-    exit 1
-  ;;
-esac
-echo "Loading plugin: ${PLUGIN_API}"
-# shellcheck disable=SC1090
-. "${PLUGIN_API}"
-
-# Check that the right functions are available
-VALID_PLUGIN=1
-REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
-for FN_NAME in ${REQUIRED_FUNCTIONS}
-do
-  if ! type "$FN_NAME" 2>&1|grep -q 'function'
-  then
-    echo "Plugin does not have a required function: ${FN_NAME}()"
-    VALID_PLUGIN=0
-  fi
-done
-if [ "${VALID_PLUGIN}" -eq 0 ]
-then
-  exit 1
-fi
-
-#
-# IMPORT STATEBOT
-#
-
-if [ "${STATEBOT_LOG_LEVEL}" = "" ]
-then
-  STATEBOT_LOG_LEVEL=4
-fi
-
-if [ "${STATEBOT_USE_LOGGER}" = "" ]
-then
-  STATEBOT_USE_LOGGER=0
-fi
-
-# shellcheck disable=SC1091
-. ../../statebot.sh
-
-if ! is_valid_network
-then
-  warn "is_valid_network() didn't pass, exiting..."
-  exit 1
-fi
-
-#
-# EVENTS
-#
-
-perform_transitions ()
+main()
 {
-  local ON=""; local THEN=""
+  load_fail_count_for_this_session
 
-  case $1 in
-    # check status
-    'idle->pinging'|'offline->pinging'|'online->pinging')
-      ON="check"
-      THEN="check_connection"
-    ;;
+  #
+  # STATEBOT
+  #
 
-    # online: already logged-in
-    'pinging->online'|'logging-in->online')
-      ON="connected"
-      THEN="online_action"
-    ;;
+  # Start Statebot
+  statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
 
-    # offline: happy login path
-    'pinging->offline')
-      ON="disconnected"
-      THEN="statebot_emit login"
-    ;;
-    'offline->logging-in')
-      ON="login"
-      THEN="attempt_login"
-    ;;
+  # Emit events from the command-line
+  if [ "${EVENT}" != "" ]
+  then
+    statebot_emit "${EVENT}"
+  fi
+}
 
-    # offline: unhappy login path
-    'logging-in->failure')
-      ON="failed"
-      THEN="log_failure"
-    ;;
-    'failure->offline')
-      ON="disconnected"
-      THEN="offline_message"
-    ;;
-    'failure->rebooting')
-      ON="rebooting"
-    ;;
+load_plugin()
+{
+  local PLUGIN_INFO
+  local PLUGIN_EXIT
+  local PLUGIN_NAME
+  local PLUGIN_PATH
+  local PLUGIN_API
 
-    # hotplug ifdown
-    'online->offline')
-      ON="ifdown"
-    ;;
+  PLUGIN_INFO=$(./load-plugins.sh "$@")
+  PLUGIN_EXIT=$?
+  PLUGIN_NAME=$(echo "${PLUGIN_INFO}"|awk '{ print $1 }')
+  PLUGIN_PATH=$(echo "${PLUGIN_INFO}"|awk '{ print $2 }')
+  PLUGIN_API=$(echo "${PLUGIN_INFO}"|awk '{ print $3 }')
+  EVENT=$(echo "${PLUGIN_INFO}"|awk '{ print $4 }')
 
-    # resume
-    'paused->idle')
-      ON="resume"
+  case $PLUGIN_EXIT in
+    1)
+      echo "Specified plugin: [${PLUGIN_NAME}]"
+    ;;
+    2)
+      echo "Just one plugin, defaulting to it: [${PLUGIN_NAME}]"
     ;;
     *)
-    # pause
-    if case_statebot "$1" '
-      (idle|pinging|online|offline|logging-in|failure) ->
-        paused
-    '
-    then
-      ON="pause"
-    fi
+      echo "${PLUGIN_INFO}"
+      exit 1
     ;;
   esac
 
-  echo ${ON} "${THEN}"
+  echo "Loading plugin: ${PLUGIN_API}"
+
+  # shellcheck disable=SC1090
+  . "${PLUGIN_API}"
+
+  # Check that the right functions are available
+  VALID_PLUGIN=1
+  REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
+  for FN_NAME in ${REQUIRED_FUNCTIONS}
+  do
+    if ! type "$FN_NAME" 2>&1|grep -q 'function'
+    then
+      echo "Plugin does not have a required function: ${FN_NAME}()"
+      VALID_PLUGIN=0
+    fi
+  done
+  if [ "${VALID_PLUGIN}" -eq 0 ]
+  then
+    exit 1
+  fi
 }
 
 #
-# IMPLEMENTATION
+# API SURFACE
 #
 
 check_connection ()
@@ -264,17 +198,101 @@ try_a_reboot_if_necessary ()
   reboot
 }
 
-load_fail_count_for_this_session
-
 #
-# STATEBOT
+# STATEBOT TRANSITIONS
 #
 
-# Start Statebot
-statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
+perform_transitions ()
+{
+  local ON
+  local THEN
 
-# Emit events from the command-line
-if [ "${EVENT}" != "" ]
+  ON=""
+  THEN=""
+
+  case $1 in
+    # check status
+    'idle->pinging'|'offline->pinging'|'online->pinging')
+      ON="check"
+      THEN="check_connection"
+    ;;
+
+    # online: already logged-in
+    'pinging->online'|'logging-in->online')
+      ON="connected"
+      THEN="online_action"
+    ;;
+
+    # offline: happy login path
+    'pinging->offline')
+      ON="disconnected"
+      THEN="statebot_emit login"
+    ;;
+    'offline->logging-in')
+      ON="login"
+      THEN="attempt_login"
+    ;;
+
+    # offline: unhappy login path
+    'logging-in->failure')
+      ON="failed"
+      THEN="log_failure"
+    ;;
+    'failure->offline')
+      ON="disconnected"
+      THEN="offline_message"
+    ;;
+    'failure->rebooting')
+      ON="rebooting"
+    ;;
+
+    # hotplug ifdown
+    'online->offline')
+      ON="ifdown"
+    ;;
+
+    # resume
+    'paused->idle')
+      ON="resume"
+    ;;
+    *)
+    # pause
+    if case_statebot "$1" '
+      (idle|pinging|online|offline|logging-in|failure) ->
+        paused
+    '
+    then
+      ON="pause"
+    fi
+    ;;
+  esac
+
+  echo ${ON} "${THEN}"
+}
+
+#
+# LOAD PLUGIN :: IMPORT STATEBOT
+#
+
+load_plugin "$@"
+
+if [ "${STATEBOT_LOG_LEVEL}" = "" ]
 then
-  statebot_emit "${EVENT}"
+  STATEBOT_LOG_LEVEL=4
 fi
+
+if [ "${STATEBOT_USE_LOGGER}" = "" ]
+then
+  STATEBOT_USE_LOGGER=0
+fi
+
+# shellcheck disable=SC1091
+. ../../statebot.sh
+
+if ! is_valid_network
+then
+  warn "is_valid_network() didn't pass, exiting..."
+  exit 1
+fi
+
+main
