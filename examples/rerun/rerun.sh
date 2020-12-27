@@ -5,6 +5,18 @@ RERUN_JOB="/tmp/rerun-job.txt"
 RERUN_LOG="/tmp/rerun-failures.txt"
 RERUN_HISTORY_DIR="history"
 
+RERUN_CHART='
+
+  idle ->
+    rotate-logs ->
+    running ->
+    done
+
+  // Hitting CTRL+C will "pause" the current job
+  running -> paused -> running
+
+'
+
 HELP="
 Usage:
   ./rerun.sh <run-count> <what-you-want-to-run>
@@ -26,42 +38,65 @@ to see the failures before a run is finished, type:
 Running ./rerun.sh with args will always start a new run.
 "
 
-RERUN_CHART='
+#
+# Entry point
+#
 
-  idle ->
-    rotate-logs ->
-    running ->
-    done
-
-  // Hitting CTRL+C will "pause" the current job
-  running -> paused -> running
-
-'
-
-perform_transitions ()
+main()
 {
-  local ON=""; local THEN=""
+  if [ "$1" = "reset" ]
+  then
+    echo ""
+    echo "Resetting..."
+    echo ""
+    statebot_reset
+    exit 255
+  fi
 
-  case $1 in
-    'idle->rotate-logs')
-      ON="init-run"
-      THEN="rotate_logs_and_start_run"
-    ;;
-    'rotate-logs->running'|'paused->running')
-      ON="resume-run"
-      THEN="start_or_resume_run"
-    ;;
-    'running->paused')
-      ON="ctrl-c-hit"
-      THEN="catch_interrupt"
-    ;;
-    'running->done')
-      ON="finished"
-      THEN="all_done"
-    ;;
-  esac
+  if [ "${CURRENT_STATE}" = "paused" ]
+  then
+    if [ "$1" = "" ]
+    then
+      load_run_position
+      statebot_emit "resume-run"
+    elif [ "$#" -eq 0 ]
+    then
+      statebot_reset
+    fi
+  fi
 
-  echo ${ON} ${THEN}
+  if [ "${CURRENT_STATE}" != "idle" ]
+  then
+    echo ""
+    echo "Looks like you are already running something!"
+    echo "If you are not, clear the current state using:"
+    echo ""
+    echo "  ./rerun.sh reset"
+    echo ""
+    exit 255
+  fi
+
+  if ! echo "$1"|grep -Eq '^[0-9]+$'
+  then
+    echo ""
+    echo "Please specify the number of iterations as the first argument"
+    echo "${HELP}"
+    exit 255
+  fi
+
+  max_runs=$1
+  shift 1
+  cmd_to_run="${*}"
+
+  if [ "${cmd_to_run}" = "" ]
+  then
+    echo ""
+    echo "Please specify the thing to run"
+    echo "${HELP}"
+    exit 255
+  fi
+
+  statebot_emit "init-run"
 }
 
 #
@@ -167,6 +202,7 @@ time_from_seconds()
   }'
 }
 
+# Cross-env "add_seconds"
 add_seconds_1 () { date -j -v+"${1}"S '+%H:%M:%S' 2> /dev/null; }
 add_seconds_2 () { date --date="+${1} seconds" "+%H:%M:%S" 2> /dev/null; }
 add_seconds_3 () { awk -v secs="${1}" 'BEGIN { print strftime("%H:%M:%S", systime() + secs) }' 2> /dev/null; }
@@ -341,67 +377,44 @@ catch_interrupt()
   exit "${unique_failures}"
 }
 
+perform_transitions ()
+{
+  local ON
+  local THEN
+
+  ON=""
+  THEN=""
+
+  case $1 in
+    'idle->rotate-logs')
+      ON="init-run"
+      THEN="rotate_logs_and_start_run"
+    ;;
+    'rotate-logs->running'|'paused->running')
+      ON="resume-run"
+      THEN="start_or_resume_run"
+    ;;
+    'running->paused')
+      ON="ctrl-c-hit"
+      THEN="catch_interrupt"
+    ;;
+    'running->done')
+      ON="finished"
+      THEN="all_done"
+    ;;
+  esac
+
+  echo ${ON} ${THEN}
+}
+
+#
 # Import + init Statebot
+#
+
 cd "${0%/*}" || exit 255
 # shellcheck disable=SC1091
 STATEBOT_LOG_LEVEL=3 . ../../statebot.sh
 statebot_init "rerun" "idle" "" "${RERUN_CHART}"
 trap "statebot_emit ctrl-c-hit" INT
 
-#
-# Entry point
-#
-
-if [ "$1" = "reset" ]
-then
-  echo ""
-  echo "Resetting..."
-  echo ""
-  statebot_reset
-  exit 255
-fi
-
-if [ "${CURRENT_STATE}" = "paused" ]
-then
-  if [ "$1" = "" ]
-  then
-    load_run_position
-    statebot_emit "resume-run"
-  elif [ "$#" -eq 0 ]
-  then
-    statebot_reset
-  fi
-fi
-
-if [ "${CURRENT_STATE}" != "idle" ]
-then
-  echo ""
-  echo "Looks like you are already running something!"
-  echo "If you are not, clear the current state using:"
-  echo ""
-  echo "  ./rerun.sh reset"
-  echo ""
-  exit 255
-fi
-
-if ! echo "$1"|grep -Eq '^[0-9]+$'
-then
-  echo ""
-  echo "Please specify the number of iterations as the first argument"
-  echo "${HELP}"
-  exit 255
-fi
-
-max_runs=$1
-shift 1
-cmd_to_run="${*}"
-
-if [ "${cmd_to_run}" = "" ]
-then
-  echo ""
-  echo "Please specify the thing to run"
-  echo "${HELP}"
-  exit 255
-fi
-
-statebot_emit "init-run"
+main "$@"
