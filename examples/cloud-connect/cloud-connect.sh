@@ -22,6 +22,16 @@ CLOUD_CONNECT_CHART='
 
 '
 
+if [ "${STATEBOT_LOG_LEVEL}" = "" ]
+then
+  STATEBOT_LOG_LEVEL=4
+fi
+
+if [ "${STATEBOT_USE_LOGGER}" = "" ]
+then
+  STATEBOT_USE_LOGGER=0
+fi
+
 main()
 {
   load_fail_count_for_this_session
@@ -223,15 +233,6 @@ cd "${0%/*}" || exit 255
 
 load_plugin "$@"
 
-if [ "${STATEBOT_LOG_LEVEL}" = "" ]
-then
-  STATEBOT_LOG_LEVEL=4
-fi
-
-if [ "${STATEBOT_USE_LOGGER}" = "" ]
-then
-  STATEBOT_USE_LOGGER=0
-fi
 # shellcheck disable=SC1091
 . ./_failure-counting.sh
 
