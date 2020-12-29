@@ -2,8 +2,8 @@
 # shellcheck disable=SC2034
 
 # Network
-BT_SSID="BTWifi-with-FON"
-BT_IFACE=$(uci get wireless.sta.ifname)
+BT_SSID=${CC_WIRELESS_SSID_MATCH:-"BTWifi-with-FON"}
+BT_IFACE=${CC_WIRELESS_IFACE:-"wlan-sta"}
 BT_COOKIES="/tmp/bt_cookies.txt"
 BT_PREVIOUS_ATTEMPT="/tmp/bt_previous_attempt.html"
 BT_REBOOT_LOG="${HOME}/bt_reboot_log.txt"

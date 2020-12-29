@@ -1,9 +1,12 @@
 #!/bin/sh
 # shellcheck disable=SC2034,SC2039
 
-CLOUD_CONNECT_ERRORS='/tmp/error_count.txt'
-FAILURE_LIMIT=20
-FAILURE_COUNT=0
+CC_FAILURE_COUNT_FILE='/tmp/error_count.txt'
+CC_FAILURE_COUNT=0
+CC_FAILURE_LIMIT_BEFORE_REBOOT=${CC_FAILURE_LIMIT_BEFORE_REBOOT:-20}
+
+STATEBOT_LOG_LEVEL=${STATEBOT_LOG_LEVEL:-4}
+STATEBOT_USE_LOGGER=${STATEBOT_USE_LOGGER:-0}
 
 CLOUD_CONNECT_CHART='
 
@@ -27,16 +30,6 @@ CLOUD_CONNECT_CHART='
 
 '
 
-if [ "${STATEBOT_LOG_LEVEL}" = "" ]
-then
-  STATEBOT_LOG_LEVEL=4
-fi
-
-if [ "${STATEBOT_USE_LOGGER}" = "" ]
-then
-  STATEBOT_USE_LOGGER=0
-fi
-
 main()
 {
   load_fail_count_for_this_session
@@ -57,11 +50,7 @@ main()
 
 load_plugin()
 {
-  local PLUGIN_INFO
-  local PLUGIN_EXIT
-  local PLUGIN_NAME
-  local PLUGIN_PATH
-  local PLUGIN_API
+  local PLUGIN_INFO PLUGIN_EXIT PLUGIN_NAME PLUGIN_PATH PLUGIN_API
 
   PLUGIN_INFO=$(./_load-plugins.sh "$@")
   PLUGIN_EXIT=$?
@@ -160,8 +149,7 @@ log_failure ()
 
 perform_transitions ()
 {
-  local ON
-  local THEN
+  local ON THEN
 
   ON=""
   THEN=""

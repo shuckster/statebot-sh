@@ -6,33 +6,33 @@
 
 load_fail_count_for_this_session ()
 {
-  if [ -f "${CLOUD_CONNECT_ERRORS}" ]
+  if [ -f "${CC_FAILURE_COUNT_FILE}" ]
   then
-    FAILURE_COUNT=$(cat "${CLOUD_CONNECT_ERRORS}")
+    CC_FAILURE_COUNT=$(cat "${CC_FAILURE_COUNT_FILE}")
   fi
 }
 
 bump_fail_count_for_this_session ()
 {
-  : $((FAILURE_COUNT+=1))
-  echo "${FAILURE_COUNT}" > "${CLOUD_CONNECT_ERRORS}"
-  warn "Failure count: ${FAILURE_COUNT}"
+  : $(( CC_FAILURE_COUNT += 1 ))
+  echo "${CC_FAILURE_COUNT}" > "${CC_FAILURE_COUNT_FILE}"
+  warn "Failure count: ${CC_FAILURE_COUNT}"
 }
 
 unbump_fail_count_for_this_session ()
 {
-  : $((FAILURE_COUNT-=1))
-  if [ "${FAILURE_COUNT}" -lt 0 ]
+  : $(( CC_FAILURE_COUNT -= 1 ))
+  if [ "${CC_FAILURE_COUNT}" -lt 0 ]
   then
-    FAILURE_COUNT=0
+    CC_FAILURE_COUNT=0
   fi
-  echo "${FAILURE_COUNT}" > "${CLOUD_CONNECT_ERRORS}"
-  log "Failure count: ${FAILURE_COUNT}"
+  echo "${CC_FAILURE_COUNT}" > "${CC_FAILURE_COUNT_FILE}"
+  log "Failure count: ${CC_FAILURE_COUNT}"
 }
 
 we_have_failed_enough_to_try_a_reboot ()
 {
-  if [ "${FAILURE_COUNT}" -ge "${FAILURE_LIMIT}" ]
+  if [ "${CC_FAILURE_COUNT}" -ge "${CC_FAILURE_LIMIT_BEFORE_REBOOT}" ]
   then
     return 0
   fi

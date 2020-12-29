@@ -7,29 +7,25 @@
 # export ACTION
 # /path/to/this/file/hotplug.sh
 
-# Change to your network interface if the UCI command fails, eg:
-# CC_IFACE="apcli0"
-CC_IFACE=$(uci get wireless.sta.ifname)
+cd "${0%/*}" || exit 255
 
-# Change to the name of the required plugin
-CC_PLUGIN="bt-wifi"
+# shellcheck disable=SC1091
+. ./_config.sh
 
-if [ "${DEVICE}" != "${CC_IFACE}" ]
+if [ "${DEVICE}" != "${CC_WIRELESS_IFACE}" ]
 then
   exit
 fi
 
 logger -t "cloud-connect" "HOTPLUG :: Device: ${DEVICE} / Action: ${ACTION}"
 
-cd "${0%/*}" || exit 255
-
 if [ "${ACTION}" = "ifdown" ]
 then
-  ./cloud-connect.sh ${CC_PLUGIN} ifdown
+  ./cc.sh ifdown
 fi
 
 if [ "${ACTION}" = "ifup" ]
 then
   sleep 5
-  ./cloud-connect.sh ${CC_PLUGIN} check
+  ./cc.sh check
 fi
