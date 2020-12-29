@@ -48,7 +48,7 @@ load_plugin()
   local PLUGIN_PATH
   local PLUGIN_API
 
-  PLUGIN_INFO=$(./load-plugins.sh "$@")
+  PLUGIN_INFO=$(./_load-plugins.sh "$@")
   PLUGIN_EXIT=$?
   PLUGIN_NAME=$(echo "${PLUGIN_INFO}"|awk '{ print $1 }')
   PLUGIN_PATH=$(echo "${PLUGIN_INFO}"|awk '{ print $2 }')
