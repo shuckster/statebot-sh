@@ -274,6 +274,8 @@ perform_transitions ()
 # LOAD PLUGIN :: IMPORT STATEBOT
 #
 
+cd "${0%/*}" || exit 255
+
 load_plugin "$@"
 
 if [ "${STATEBOT_LOG_LEVEL}" = "" ]
