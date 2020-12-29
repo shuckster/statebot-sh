@@ -7,8 +7,14 @@
 # export ACTION
 # /path/to/this/file/hotplug.sh
 
-# Change apcli0 to your network interface
-if [ "${DEVICE}" != "apcli0" ]
+# Change to your network interface if the UCI command fails, eg:
+# CC_IFACE="apcli0"
+CC_IFACE=$(uci get wireless.sta.ifname)
+
+# Change to the name of the required plugin
+CC_PLUGIN="bt-wifi"
+
+if [ "${DEVICE}" != "${CC_IFACE}" ]
 then
   exit
 fi
@@ -19,11 +25,11 @@ cd "${0%/*}" || exit 255
 
 if [ "${ACTION}" = "ifdown" ]
 then
-  ./cloud-connect.sh bt-wifi ifdown
+  ./cloud-connect.sh ${CC_PLUGIN} ifdown
 fi
 
 if [ "${ACTION}" = "ifup" ]
 then
   sleep 5
-  ./cloud-connect.sh bt-wifi check
+  ./cloud-connect.sh ${CC_PLUGIN} check
 fi

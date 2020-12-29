@@ -3,7 +3,7 @@
 
 # Network
 BT_SSID="BTWifi-with-FON"
-BT_IFACE="apcli0"
+BT_IFACE=$(uci get wireless.sta.ifname)
 BT_COOKIES="/tmp/bt_cookies.txt"
 BT_PREVIOUS_ATTEMPT="/tmp/bt_previous_attempt.html"
 BT_REBOOT_LOG="${HOME}/bt_reboot_log.txt"
