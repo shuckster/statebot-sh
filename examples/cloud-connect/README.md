@@ -30,26 +30,11 @@ BT used to support FON accounts, but since the [18th of June 2020](plugins/bt-wi
 
 ## Installation
 
-Cloud Connect is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh) to get it.
+Cloud Connect is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh#quick-start) to get it.
 
-You can copy-paste the following to install it into `/opt`:
+For the Quick Start instructions below we'll assume you've installed Statebot-sh into `/opt/statebot` using the `install.sh` helper.
 
-```sh
-cd /tmp
-curl -L https://github.com/shuckster/statebot-sh/archive/master.zip > statebot-sh.zip
-unzip statebot-sh.zip && rm statebot-sh.zip
-mkdir /opt 2> /dev/null
-mv statebot-sh-master /opt/statebot
-```
-
-Run the tests to see if `Statebot-sh` will work, and consequently, Cloud Connect:
-
-```sh
-cd /opt/statebot
-./tests/all.sh
-```
-
-We'll assume you're in `/opt` for the Quick Start:
+Change to the Cloud Connect folder with:
 
 ```sh
 cd /opt/statebot/examples/cloud-connect

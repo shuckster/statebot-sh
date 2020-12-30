@@ -21,7 +21,20 @@ Documentation is in this README, and examples can be found in `/examples`. It's 
 
 # Quick Start
 
-Download `statebot.sh`:
+`install.sh` will install Statebot-sh and its examples into `/opt/statebot`:
+
+```sh
+# Run install.sh using curl
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/shuckster/statebot-sh/master/install.sh)"
+```
+```sh
+# Run install.sh using wget
+sh -c "$(wget -qO- https://raw.githubusercontent.com/shuckster/statebot-sh/master/install.sh)"
+```
+
+## Manual installation
+
+Of course, you can also just download whatever you like directly from [the repository](https://github.com/shuckster/statebot-sh). Only `statebot.sh` is required:
 
 ```sh
 curl https://raw.githubusercontent.com/shuckster/statebot-sh/master/statebot.sh > statebot.sh
@@ -34,7 +47,7 @@ chmod +x statebot.sh
 ./statebot.sh
 ```
 
-## A small example:
+# A small example:
 
 ```sh
 #!/bin/sh
