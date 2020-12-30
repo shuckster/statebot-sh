@@ -7,18 +7,21 @@
     pinging
 
   offline ->
-    logging-in ->
-    online | failure
+    logging-in -> (online | failure)
 
   failure ->
-    offline | rebooting
+    (offline | rebooting)
 
   // Go directly to [offline] on Hotplug "ifdown"
   online -> offline
 
   // Pause/resume functionality:
-  (idle | pinging | online | offline | logging-in | failure) ->
-    paused -> idle
+        idle |
+     pinging |
+      online |
+     offline |
+  logging-in |
+     failure -> paused -> idle
 
 ```
 
