@@ -40,7 +40,9 @@ A basic implementation:
   # Implement a "perform_transitions" function to act on events:
   perform_transitions ()
   {
-    local ON=""; local THEN=""
+    local ON THEN
+    ON=""
+    THEN=""
 
     case $1 in
       "idle->pending")
@@ -62,7 +64,8 @@ A basic implementation:
   # Implement an "on_transitions" function to act on transitions:
   on_transitions ()
   {
-    local THEN=""
+    local THEN
+    THEN=""
 
     case $1 in
       "idle->pending")

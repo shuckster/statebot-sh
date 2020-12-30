@@ -55,7 +55,9 @@ PROMISE_CHART='
 # Implement a "perform_transitions" function to act on events:
 perform_transitions ()
 {
-  local ON=""; local THEN=""
+  local ON THEN
+  ON=""
+  THEN=""
 
   case $1 in
     'idle->pending')
@@ -77,7 +79,8 @@ perform_transitions ()
 # Implement an "on_transitions" function to act on transitions:
 on_transitions ()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   case $1 in
     'idle->pending')
@@ -219,7 +222,9 @@ These should be available before calling `statebot_init()`.
 ```sh
 perform_transitions ()
 {
-  local ON=""; local THEN=""
+  local ON THEN
+  ON=""
+  THEN=""
 
   # A string in the form `from->to` will be passed-in
   # as the only argument ($1) to this function, and it
@@ -263,7 +268,8 @@ perform_transitions ()
 ```sh
 on_transitions ()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   # A string in the form `from->to` will be passed-in
   # as the only argument ($1) to this function, and it
@@ -305,7 +311,8 @@ To emulate this in Statebot-sh, the function `case_statebot` is offered:
 ```sh
 on_transitions ()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   if case_statebot $1 '
     resolved | rejected -> done
@@ -327,7 +334,9 @@ For example:
 ```sh
 perform_transitions ()
 {
-  local ON=""; local THEN=""
+  local ON THEN
+  ON=""
+  THEN=""
 
   case $1 in
     # Handle your "simple" transitions first:
