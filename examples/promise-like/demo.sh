@@ -8,11 +8,13 @@ STATEBOT_USE_LOGGER=0
 # 1 to use the `logger` command instead of `echo`
 
 PROMISE_CHART='
+
   idle ->
     // Behaves a bit like a JS Promise
     pending ->
       (rejected | resolved) ->
     idle
+
 '
 
 # Implement a "perform_transitions" function to act on events:
@@ -63,8 +65,9 @@ all_finished() { echo "That was easy!"; }
 
 # Import Statebot
 cd "${0%/*}" || exit 255
-. ../../statebot.sh
 # (^- change the working-directory to where this script is)
+
+. ../../statebot.sh
 
 statebot_init "demo" "idle" "start" "$PROMISE_CHART"
 #   machine name -^     ^      ^           ^
@@ -76,12 +79,14 @@ echo      "Current state: $CURRENT_STATE"
 echo     "Previous state: $PREVIOUS_STATE"
 echo "Last emitted event: $PREVIOUS_EVENT"
 
-if [ "$1" = "" ]; then
+if [ "$1" = "" ]
+then
   exit
 fi
 
 # Allow resetting & emitting-events from the command-line:
-if [ "$1" = "reset" ]; then
+if [ "$1" = "reset" ]
+then
   statebot_reset
 else
   statebot_emit "$1"

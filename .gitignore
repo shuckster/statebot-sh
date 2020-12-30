@@ -4,3 +4,4 @@
 *.gz
 ._*.png
 publish.sh
+tar.sh

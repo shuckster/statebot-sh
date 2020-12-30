@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Cloud Connect :: Ability to reset
 
+### Changed
+- Small code police
+
 ## [2.3.0] - 2020-12-30
 ### Added
 - Cloud Connect :: A few more debugging messages

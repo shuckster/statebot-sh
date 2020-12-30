@@ -30,11 +30,13 @@ A basic implementation:
   # 1 to use the `logger` command instead of `echo`
 
   PROMISE_CHART="
+
     idle ->
       // Behaves a bit like a JS Promise
       pending ->
         (rejected | resolved) ->
       idle
+
   "
 
   # Implement a "perform_transitions" function to act on events:
