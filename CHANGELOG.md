@@ -5,8 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.3.0] - 2020-12-30
+### Added
+- Cloud Connect :: A few more debugging messages
+
 ### Changed
-- Changed license from ISC to MIT
+- Changed license from ISC to the legally identical MIT, since it's more recognisable
+- Cloud Connect :: Refactored with a bent towards easier config
+- Cloud Connect :: Update README with a Quick Start
+- Cloud Connect :: BT-Wifi plugin now tested
+- Rerun :: Small refactor for readability
+
 
 ## [2.2.4] - 2020-06-20
 ### Changed
