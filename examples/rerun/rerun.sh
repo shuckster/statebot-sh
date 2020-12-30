@@ -131,6 +131,7 @@ save_run_position()
 load_run_position()
 {
   local rerun_info
+
   rerun_info=$(cat "${RERUN_JOB}")
   start_from_run=$(printf "${rerun_info}"|awk 'BEGIN { FS="!" } { print $1 + 1 }')
   max_runs=$(printf "${rerun_info}"|awk 'BEGIN { FS="!" } { print $2 }')
@@ -165,25 +166,27 @@ rollers=""
 
 rolling_avg()
 {
-  local rolling_max=5
+  local rolling_max sum
+
+  rolling_max=5
   if [ "${rolling_idx}" -ge "${rolling_max}" ]
   then
     rollers=$(printf "${rollers}"|awk '{ print $2 " " $3 " " $4 " " $5 }')
   fi
   rollers="${rollers} $1"
 
-  local sum=0
+  sum=0
   for next in ${rollers}
   do
-    : $((sum+=next))
+    : $(( sum += next ))
   done
 
   if [ "${rolling_idx}" -lt "${rolling_max}" ]
   then
-    : $((rolling_idx+=1))
+    : $(( rolling_idx += 1 ))
   fi
 
-  : $((avg=sum/rolling_idx))
+  : $(( avg = sum / rolling_idx ))
   printf "${avg}"
 }
 
@@ -212,8 +215,9 @@ add_seconds_3 () { awk -v secs="${1}" 'BEGIN { print strftime("%H:%M:%S", systim
 
 eta_from_seconds()
 {
-  local seconds="$1"
-  local eta
+  local seconds eta
+
+  seconds="$1"
   eta=$(${add_seconds} ${seconds})
   printf "%s (%s)" "${eta}" "$(time_from_seconds ${seconds})"
 }
@@ -224,14 +228,14 @@ add_failure_to_log()
 {
   # Before hashing, lets remove anything that changes between identical
   # runs, like time-stamps and durations
-  local output_without_cruft
-  local output_hash
+  local output_without_cruft output_hash
+
   output_without_cruft=$(printf "$1"|grep -v "npm ERR!"|grep -v "^\(real\|user\|sys\) "|sed 's/([0-9]*[hms]*)$//'|sed 's/\([0-9]\) passing (.*)$/\1 passing/')
   output_hash=$(printf "${output_without_cruft}"|"${WHICH_MD5}")
 
   if ! grep -q "${output_hash}" "${RERUN_LOG}"
   then
-    : $((unique_failures+=1))
+    : $(( unique_failures += 1 ))
     {
       echo "${output_without_cruft}"
       echo ""
@@ -243,7 +247,7 @@ add_failure_to_log()
     } >> "${RERUN_LOG}"
   fi
 
-  : $((failures+=1))
+  : $(( failures += 1 ))
 }
 
 print_unique_failures()
@@ -262,11 +266,11 @@ print_single_run()
 {
   count="$1"
   seconds=$(printf "$2"|awk 'BEGIN { FS="." } { print $1 }')
-  : $((total_duration+=seconds))
+  : $(( total_duration += seconds ))
   last_run_duration="${seconds}"
-  : $((remaining_tests=max_runs-count))
+  : $(( remaining_tests = max_runs - count))
   avg_duration=$(rolling_avg "${last_run_duration}")
-  : $((estimated_remaining_duration=avg_duration*remaining_tests))
+  : $(( estimated_remaining_duration = avg_duration * remaining_tests))
 
   echo "| Finished run ${count} of ${max_runs}:"
   echo ">  Took: $(time_from_seconds ${last_run_duration})"
@@ -279,22 +283,21 @@ print_single_run()
 
 run_loop()
 {
-  local count=${start_from_run}
+  local count
+
+  count=${start_from_run}
+
   while [ "${count}" -le "${max_runs}" ]
   do
     echo "Running ${count} of ${max_runs}..."
 
-    local start
-    local full_output
-    local success
-    local end
-    local execution_time_in_seconds
+    local start full_output success end execution_time_in_seconds
 
     start=$(date +%s)
     full_output="$(${cmd_to_run} 2>&1)"
     success=$?
     end=$(date +%s)
-    execution_time_in_seconds=$((end-start))
+    execution_time_in_seconds=$(( end - start ))
 
     # shellcheck disable=SC2181
     if [ ${success} -ne 0 ]
@@ -305,7 +308,7 @@ run_loop()
 
     print_single_run "${count}" "${execution_time_in_seconds}"
     run_so_far="${count}"
-    : $((count+=1))
+    : $(( count += 1 ))
   done
 }
 
@@ -379,8 +382,7 @@ catch_interrupt()
 
 perform_transitions ()
 {
-  local ON
-  local THEN
+  local ON THEN
 
   ON=""
   THEN=""
@@ -408,13 +410,20 @@ perform_transitions ()
 }
 
 #
-# Import + init Statebot
+# ENTRY POINT
+#
+# - Import/init Statebot
+# - Add CTRL+C trap
+# - Start/resume run
 #
 
 cd "${0%/*}" || exit 255
+
 # shellcheck disable=SC1091
 STATEBOT_LOG_LEVEL=3 . ../../statebot.sh
+
 statebot_init "rerun" "idle" "" "${RERUN_CHART}"
+
 trap "statebot_emit ctrl-c-hit" INT
 
 main "$@"
