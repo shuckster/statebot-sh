@@ -32,18 +32,79 @@ BT used to support FON accounts, but since the [18th of June 2020](plugins/bt-wi
 
 Cloud Connect is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh) to get it.
 
-Then just pop Cloud Connect into your `crontab`...
-
-#### `/etc/crontabs/root`
+You can copy-paste the following to install it into `/opt`:
 
 ```sh
-# Every 10th minute, check the connection using the bt-wifi plugin
-*/10 * * * * /opt/statebot/examples/cloud-connect.sh bt-wifi check
+cd /tmp
+curl -L https://github.com/shuckster/statebot-sh/archive/master.zip > statebot-sh.zip
+unzip statebot-sh.zip && rm statebot-sh.zip
+mkdir /opt 2> /dev/null
+mv statebot-sh-master /opt/statebot
 ```
 
-...and maybe your `hotplug.d/iface/` folder, too:
+Run the tests to see if `Statebot-sh` will work, and consequently, Cloud Connect:
 
-#### `/etc/hotplug.d/iface/99-captive-portal`
+```sh
+cd /opt/statebot
+./tests/all.sh
+```
+
+We'll assume you're in `/opt` for the Quick Start:
+
+```sh
+cd /opt/statebot/examples/cloud-connect
+```
+
+## Quick Start
+
+Cloud Connect has been tested and works on the following **GL-iNet devices: AR300M, MT300N-V2, and AR750S**, and this Quick Start assumes you're using one.
+
+It might work on other OpenWRT devices, Raspberry Pi's etc. with a bit of bashing.
+
+First of all, configure a plugin. Find its `dot-secrets` file in the corresponding `plugin/` folder and rename it to `.secrets`. Populate this file with your own credentials and save it.
+
+`cloud-connect.sh` is the main script and is run like so:
+
+```sh
+./cloud-connect.sh bt-wifi check
+#                  ^       ^
+# plugin ----------+       |
+#                          |
+# event -------------------+
+# - (check, resume, pause)
+```
+
+> Note that "DNS rebind protection" is turned-on by default on GL-iNet devices. You'll need to turn it off so the script (and yourself) can access the captive-portal login-screen.
+
+To help with installing Cloud Connect into your crontab/hotplug, you can use `cc.sh`, which takes its configuration from `_config.sh`:
+
+```sh
+./cc.sh check
+#       ^- event only
+#          (plugin is specified in _config.sh)
+
+vi _config.sh
+```
+
+Then just pop Cloud Connect into your `crontab`:
+
+#### File: `/etc/crontabs/root`
+
+```sh
+# Every 10th minute, check the connection:
+*/10 * * * * /opt/statebot/examples/cloud-connect/cc.sh check
+```
+
+Be sure to enable and start `crontab` to enable this periodic check:
+
+```sh
+/etc/init.d/cron enable
+/etc/init.d/cron restart
+```
+
+Maybe add Cloud Connect your `hotplug.d` too, in case the wifi connection flutters:
+
+#### File: `/etc/hotplug.d/iface/99-captive-portal`
 
 ```sh
 #!/bin/sh
@@ -52,9 +113,9 @@ export ACTION
 /opt/statebot/examples/cloud-connect/hotplug.sh
 ```
 
-## Usage
+## General Usage
 
-Check the status of it like this:
+Check the status of Cloud Connect like this:
 
 #### `CLI:`
 
@@ -133,7 +194,7 @@ report_online_status ()
 }
 ```
 
-Have a look in `plugins/` to see this example and another that works for BT Fon & OpenZone, too.
+Have a look in `plugins/` to see this example and another that works for BT Wifi, too.
 
 ## Credit
 
