@@ -100,7 +100,7 @@ load_plugin()
 }
 
 #
-# API SURFACE
+# THEN methods
 #
 
 check_connection ()
