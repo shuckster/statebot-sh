@@ -34,17 +34,20 @@ main()
 {
   load_fail_count_for_this_session
 
-  #
-  # STATEBOT
-  #
-
-  # Start Statebot
   statebot_init "cloud-connect" "idle" "" "${CLOUD_CONNECT_CHART}"
 
-  # Emit events from the command-line
-  if [ "${EVENT}" != "" ]
+  if [ "${1}" = "reset" ]
   then
-    statebot_emit "${EVENT}"
+    echo ""
+    echo "Resetting..."
+    echo ""
+    statebot_reset
+    exit 255
+  fi
+
+  if [ "${1}" != "" ]
+  then
+    statebot_emit "${1}"
   fi
 }
 
@@ -57,6 +60,7 @@ load_plugin()
   PLUGIN_NAME=$(echo "${PLUGIN_INFO}"|awk '{ print $1 }')
   PLUGIN_PATH=$(echo "${PLUGIN_INFO}"|awk '{ print $2 }')
   PLUGIN_API=$(echo "${PLUGIN_INFO}"|awk '{ print $3 }')
+
   EVENT=$(echo "${PLUGIN_INFO}"|awk '{ print $4 }')
 
   case $PLUGIN_EXIT in
@@ -88,6 +92,7 @@ load_plugin()
       VALID_PLUGIN=0
     fi
   done
+
   if [ "${VALID_PLUGIN}" -eq 0 ]
   then
     exit 1
@@ -238,4 +243,5 @@ then
   exit 1
 fi
 
-main
+# EVENT was initialised within load_plugin
+main "${EVENT}"

@@ -71,7 +71,7 @@ First of all, configure a plugin. Find its `dot-secrets` file in the correspondi
 # plugin ----------+       |
 #                          |
 # event -------------------+
-# - (check, resume, pause)
+# - (check, resume, pause, reset)
 ```
 
 > Note that "DNS rebind protection" is turned-on by default on GL-iNet devices. You'll need to turn it off so the script (and yourself) can access the captive-portal login-screen.
