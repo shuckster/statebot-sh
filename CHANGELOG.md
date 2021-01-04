@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- `statebot_init()` will source `~/.statebot-rc` if it exists.
+
+There is one use-case I know of for this: My own state-machines generally only implement `perform_transitions()`, but sometimes I want to do something else after transitions, but without modifying the original script.
+
+So I define `on_transitions()` in `~/.statebot-rc` and use STATEBOT_NAME to know which Statebot sourced it.
 
 ## [2.3.1] - 2020-12-30
 ### Added

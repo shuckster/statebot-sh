@@ -199,6 +199,7 @@ __STATEBOT_AFTER_TRANSITION__=""
 __STATEBOT_HANDLING_EVENT__=0
 __STATEBOT_THEN_STACK_SIZE__=0
 __STATEBOT_EVENT_COUNT=0
+__STATEBOT_RC__="${HOME}/.statebot-rc"
 
 #
 # Command-line usage
@@ -720,6 +721,13 @@ __statebot_init ()
   STATEBOT_VALID_TRANSITIONS=$(decompose_chart "${STATEBOT_CHART}")
   # shellcheck disable=SC2034
   STATEBOT_VALID_STATES=$(decompose_transitions "${STATEBOT_VALID_TRANSITIONS}")
+
+  # Load ~/.statebot-rc if it exists
+  if [ -f "${__STATEBOT_RC__}" ]
+  then
+    # shellcheck disable=1090
+    . "${__STATEBOT_RC__}"
+  fi
 
   # We're initialised at this point
   __STATEBOT_INITIALISED__=1
