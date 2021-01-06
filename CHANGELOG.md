@@ -6,12 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-Two new methods:
-1. `statebot_current_state_of()` -
-Get the current state of another machine
+- Two new methods:
 
-2. `statebot_persisted_event_of()` -
-Get the persisted event of another machine
+  1. `statebot_current_state_of()` -
+  Get the current state of another machine
+
+  2. `statebot_persisted_event_of()` -
+  Get the persisted event of another machine
+
+### Changed
+- Cloud Connect :: Permit use of 'export' to allow override of defaults in _config.sh
 
 ## [2.3.2] - 2021-01-04
 ### Added
