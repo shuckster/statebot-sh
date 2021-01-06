@@ -610,7 +610,7 @@ __statebot_change_state_for_event_and_get_handler ()
 }
 
 #
-# Shows information about the current machine.
+# Pretty-prints information about the current machine.
 #
 __statebot_info ()
 {
@@ -631,6 +631,21 @@ __statebot_info ()
 
   log "|_|________________________________________ _ _ _  _  _ "
   log ""
+}
+
+#
+# Shows state/event of a specified machine.
+#
+__statebot_stat ()
+{
+  local name db_entry sb_current_state sb_persisted_event
+  name="${1}"
+
+  db_entry=$(grep "^${name}," "${__STATEBOT_DB__}")
+  sb_current_state=$(echo "${db_entry}"|awk 'BEGIN { FS="," } { print $2 }')
+  sb_persisted_event=$(echo "${db_entry}"|awk 'BEGIN { FS="," } { print $3 }')
+
+  echo "${sb_current_state} ${sb_persisted_event}"
 }
 
 #
@@ -672,6 +687,25 @@ statebot_inspect ()
 }
 
 #
+# Get current-state / previous-event of specified machines.
+#
+statebot_current_state_of ()
+{
+  local name sb_current_state
+  name="$1"
+  sb_current_state=$(__statebot_stat "${name}"|awk '{ print $1 }')
+  echo "${sb_current_state}"
+}
+
+statebot_persisted_event_of ()
+{
+  local name sb_persisted_event
+  name="$1"
+  sb_persisted_event=$(__statebot_stat "${name}"|awk '{ print $2 }')
+  echo "${sb_persisted_event}"
+}
+
+#
 # Initialise a Statebot:
 #
 #   statebot_init "name" "starting-state" "starting-event" '
@@ -689,7 +723,7 @@ statebot_init ()
 }
 __statebot_init ()
 {
-  local name db_entry
+  local name sb_stat
 
   # These are only used if the current machine does not exist in the DB
   __STATEBOT_INITIAL_STATE__="$2"
@@ -712,9 +746,9 @@ __statebot_init ()
 
   # Set current machine name/state/event
   STATEBOT_NAME=${name}
-  db_entry=$(grep "^${name}," "${__STATEBOT_DB__}")
-  CURRENT_STATE=$(echo "${db_entry}"|awk 'BEGIN { FS="," } { print $2 }')
-  PREVIOUS_EVENT=$(echo "${db_entry}"|awk 'BEGIN { FS="," } { print $3 }')
+  sb_stat=$(__statebot_stat "${STATEBOT_NAME}")
+  CURRENT_STATE=$(echo "${sb_stat}"|awk '{ print $1 }')
+  PREVIOUS_EVENT=$(echo "${sb_stat}"|awk '{ print $2 }')
   STATEBOT_CHART="$4"
 
   # Parse the chart

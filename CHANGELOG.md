@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+Two new methods:
+1. `statebot_current_state_of()` -
+Get the current state of another machine
+
+2. `statebot_persisted_event_of()` -
+Get the persisted event of another machine
 
 ## [2.3.2] - 2021-01-04
 ### Added
