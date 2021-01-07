@@ -1003,12 +1003,6 @@ statebot_reset ()
 #
 statebot_delete()
 {
-  if [ "$1" = "" ]
-  then
-    __statebot_bail "Statebot not specifed"
-    return 1
-  fi
-
   local name
   name="$1"
   warn "Deleting machine: ${name}"
