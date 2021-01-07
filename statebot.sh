@@ -180,18 +180,25 @@ The Statebot-sh API:
     # List the states available from the
     # current-state.
 
+  statebot_current_state_of "statebot_name"
+  statebot_persisted_event_of "statebot_name"
+    #                                ^
+    #  machine name -----------------+
+    #
+    # Get the current-state / persisted-event
+    # of the machine called "statebot_name".
+
+  statebot_delete "statebot_name"
+    #                    ^
+    #  machine name -----+
+    #
+    # Delete the record of a "statebot_name"
+    # from the database.
+
   # Details about the current machine:
   echo "     Current state: $CURRENT_STATE"
   echo "    Previous state: $PREVIOUS_STATE"
   echo "Last emitted event: $PREVIOUS_EVENT"
-
-  # Details about another machine:
-  echo "Current state of statebot_name: " \
-    statebot_current_state_of "statebot_name"
-
-  echo "Persisted event of statebot_name" \
-    statebot_persisted_event_of "statebot_name"
-
 '
 
 #
