@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+# shellcheck disable=SC2039,SC1004
 
 __STATEBOT_INFO__=':
 |
@@ -184,6 +184,13 @@ The Statebot-sh API:
   echo "     Current state: $CURRENT_STATE"
   echo "    Previous state: $PREVIOUS_STATE"
   echo "Last emitted event: $PREVIOUS_EVENT"
+
+  # Details about another machine:
+  echo "Current state of statebot_name: " \
+    statebot_current_state_of "statebot_name"
+
+  echo "Persisted event of statebot_name" \
+    statebot_persisted_event_of "statebot_name"
 
 '
 

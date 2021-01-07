@@ -223,6 +223,13 @@ statebot_states_available_from_here
 echo "     Current state: $CURRENT_STATE"
 echo "    Previous state: $PREVIOUS_STATE"
 echo "Last emitted event: $PREVIOUS_EVENT"
+
+# Details about another machine:
+echo "Current state of statebot_name: " \
+  statebot_current_state_of "statebot_name"
+
+echo "Persisted event of statebot_name" \
+  statebot_persisted_event_of "statebot_name"
 ```
 
 ## Handling events and transitions
