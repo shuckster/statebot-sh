@@ -990,6 +990,27 @@ statebot_reset ()
 }
 
 #
+# Delete a machine from the database.
+#
+#   statebot_delete "statebot-name"
+#
+statebot_delete()
+{
+  if [ "$1" = "" ]
+  then
+    __statebot_bail "Statebot not specifed"
+    return 1
+  fi
+
+  local name
+  name="$1"
+  warn "Deleting machine: ${name}"
+
+  sed -i.bak "/^${name},/d" "${__STATEBOT_DB__}"
+  rm "${__STATEBOT_DB__}.bak"
+}
+
+#
 # Output the states available from the current-state
 #
 #   AVAILABLE_STATES="$(statebot_states_available_from_here)"

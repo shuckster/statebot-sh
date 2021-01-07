@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Two new methods:
+- New methods:
 
   1. `statebot_current_state_of()` -
   Get the current state of another machine
@@ -14,8 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   2. `statebot_persisted_event_of()` -
   Get the persisted event of another machine
 
+  3. `statebot_delete()` -
+  Delete the record of a machine from the database
+
 ### Changed
 - Cloud Connect :: Permit use of 'export' to allow override of defaults in _config.sh
+- Tests now cleanup after themselves using `statebot_delete`
 
 ## [2.3.2] - 2021-01-04
 ### Added

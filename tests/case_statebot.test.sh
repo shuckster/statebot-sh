@@ -73,5 +73,10 @@ assert_eq "${PREVIOUS_STATE}" "third" \
 assert_eq "${callback_count}" "${expected_callback_count}" \
   "THEN-callbacks should still really have run ${expected_callback_count} times"
 
+#
+# Cleanup
+#
+statebot_delete "case_statebot"
+
 assert_describe "'case_statebot' does the right thing"
 exit $?

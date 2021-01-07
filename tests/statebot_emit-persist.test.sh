@@ -121,5 +121,10 @@ assert_eq "${perf_callback_count}" "${perf_expected_callback_count}" \
 assert_eq "${on_callback_count}" "${on_expected_callback_count}" \
   "on_transitions() THEN-callbacks should still have run ${on_expected_callback_count} times"
 
+#
+# Cleanup
+#
+statebot_delete "statebot_emit-persist"
+
 assert_describe "Can 'statebot_emit' a single common event to move through states"
 exit $?

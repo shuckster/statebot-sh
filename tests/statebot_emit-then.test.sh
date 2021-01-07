@@ -62,5 +62,10 @@ assert_eq "${CURRENT_STATE}" "finished" \
 assert_eq "${on_callback_count}" "${on_expected_callback_count}" \
   "on_transitions() THEN-callbacks should have run ${on_expected_callback_count} times"
 
+#
+# Cleanup
+#
+statebot_delete "statebot_emit-then"
+
 assert_describe "Can 'statebot_emit' from within a THEN-callback"
 exit $?

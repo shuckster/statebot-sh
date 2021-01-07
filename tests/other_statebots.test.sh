@@ -58,6 +58,13 @@ assert_eq "$(statebot_persisted_event_of other_statebot_2)" "two" \
 assert_eq "$(statebot_persisted_event_of other_statebot_3)" "three" \
   "statebot_persisted_event_of other_statebot_3 is 'three'"
 
+#
+# Cleanup
+#
+statebot_delete "other_statebot_1"
+statebot_delete "other_statebot_2"
+statebot_delete "other_statebot_3"
+statebot_delete "blank_statebot"
 
 assert_describe "Can get current-state/persisted-event of other Statebots"
 exit $?
