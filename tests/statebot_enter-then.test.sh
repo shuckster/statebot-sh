@@ -8,7 +8,8 @@ TEST_CHART='
 
 on_transitions()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   case $1 in
     "idle->first")

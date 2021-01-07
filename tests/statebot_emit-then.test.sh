@@ -8,7 +8,9 @@ TEST_CHART='
 
 perform_transitions ()
 {
-  local ON=""; local THEN=""
+  local ON THEN
+  ON=""
+  THEN=""
 
   case $1 in
     'idle->pending')
@@ -29,7 +31,8 @@ perform_transitions ()
 
 on_transitions()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   if case_statebot "$1" '
     idle -> pending -> (rejected | resolved) -> finished

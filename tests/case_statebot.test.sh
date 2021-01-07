@@ -8,7 +8,8 @@ TEST_CHART='
 
 on_transitions()
 {
-  local THEN=""
+  local THEN
+  THEN=""
 
   if case_statebot "$1" '
     idle ->
