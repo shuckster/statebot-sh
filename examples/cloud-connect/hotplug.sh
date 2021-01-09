@@ -12,20 +12,38 @@ cd "${0%/*}" || exit 255
 # shellcheck disable=SC1091
 . ./_config.sh
 
-if [ "${DEVICE}" != "${CC_WIRELESS_IFACE}" ]
+if [ "" = "${CC_WIRELESS_IFACE}" ]
 then
+  logger -t "cloud-connect" "HOTPLUG :: CC_WIRELESS_IFACE not defined!"
   exit
 fi
 
 logger -t "cloud-connect" "HOTPLUG :: Device: ${DEVICE} / Action: ${ACTION}"
 
-if [ "${ACTION}" = "ifdown" ]
+if [ "${DEVICE}" != "${CC_WIRELESS_IFACE}" ]
 then
-  ./cc.sh ifdown
+  exit
 fi
 
-if [ "${ACTION}" = "ifup" ]
-then
+on_ifdown()
+{
+  ./cc.sh ifdown
+}
+
+on_ifup()
+{
   sleep 5
   ./cc.sh check
-fi
+}
+
+case "${ACTION}" in
+  disconnected)
+    on_ifdown
+  ;;
+  ifdown)
+    on_ifdown
+  ;;
+  ifup)
+    on_ifup
+  ;;
+esac
