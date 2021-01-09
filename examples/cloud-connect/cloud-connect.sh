@@ -240,7 +240,7 @@ load_plugin "$@"
 # shellcheck disable=SC1091
 . ../../statebot.sh
 
-if ! is_valid_network
+if ! is_valid_network && [ "${EVENT}" != "ifdown" ]
 then
   warn "is_valid_network() didn't pass, exiting..."
   exit 1
