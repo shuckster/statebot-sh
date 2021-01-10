@@ -86,7 +86,13 @@ load_plugin()
 
   # Check that the right functions are available
   VALID_PLUGIN=1
-  REQUIRED_FUNCTIONS='is_valid_network is_logged_in login is_reboot_allowed report_online_status'
+  REQUIRED_FUNCTIONS='
+    is_valid_network
+    is_logged_in
+    login
+    is_reboot_allowed
+    report_online_status
+  '
   for FN_NAME in ${REQUIRED_FUNCTIONS}
   do
     if ! type "$FN_NAME" 2>&1|grep -q 'function'
