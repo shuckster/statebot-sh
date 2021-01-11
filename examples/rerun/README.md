@@ -20,7 +20,7 @@ It was written with a single use-case in mind: to repeatedly run `npm run test` 
 
 ## Installation
 
-Rerun is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh) to get it. It lives in the `examples/rerun/` folder.
+Rerun is bundled as a working example for the `Statebot-sh` library, so [download that](https://github.com/shuckster/statebot-sh#quick-start) to get it. It lives in the `examples/rerun/` folder.
 
 ## Usage
 
