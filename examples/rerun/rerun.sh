@@ -1,6 +1,17 @@
 #!/bin/sh
 # shellcheck disable=SC2016,SC2006,SC2001,SC2181,SC2219,SC2039,SC2086,SC2059
 
+WHICH_MD5=$(which md5||which md5sum)
+
+if [ -z "${WHICH_MD5}" ]
+then
+  echo "md5 / md5sum not available. Maybe try:"
+  echo ""
+  echo "- apt-get install md5 md5sum"
+  echo "- opkg install md5 md5sum"
+  exit 1
+fi
+
 RERUN_JOB="/tmp/rerun-job.txt"
 RERUN_LOG="/tmp/rerun-failures.txt"
 RERUN_HISTORY_DIR="history"
@@ -221,8 +232,6 @@ eta_from_seconds()
   eta=$(${add_seconds} ${seconds})
   printf "%s (%s)" "${eta}" "$(time_from_seconds ${seconds})"
 }
-
-WHICH_MD5=$(which md5||which md5sum)
 
 add_failure_to_log()
 {
