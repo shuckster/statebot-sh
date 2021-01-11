@@ -357,7 +357,7 @@ on_transitions ()
 }
 ```
 
-It takes a transition as the first-argument, and a statebot-chart as the second. If the transition exists in the chart, an exit-code of `1` is returned.
+It takes a transition as the first-argument, and a statebot-chart as the second. If the transition exists in the chart, an exit-code of `0` is returned.
 
 Abusing this will manifest as a performance-hit on slow devices, so I recommend using it only in a wildcard `*)` at the end of a regular case-statement.
 
