@@ -119,13 +119,13 @@ Oh no!
 |
 ```
 
-## NPM specificity
+## NPM + Mocha specificity
 
 To determine the uniqueness of a failure the output is stripped of things that usually change between runs, such as timestamps and durations.
 
-This "stripping" targets NPM specifically, so lines prefixed with `npm ERR!` will be removed, and timing information in parentheses will be lopped-off the end of lines. `3 passing (1m)` becomes `3 passing`, and so on.
+This "stripping" targets NPM and the Mocha test-suite, so lines prefixed with `npm ERR!` will be removed, and so will any timing information found at the end of lines: `3 passing (1m)` becomes `3 passing`, for example.
 
-After this, the output is hashed using `md5sum`, and this hash is used to identify unique failures.
+After this, the output is hashed using `md5/md5sum`, and this hash is used to identify unique failures.
 
 ## Log history + run state
 
