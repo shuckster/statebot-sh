@@ -110,8 +110,8 @@ on_transitions ()
 }
 
 # Implement any "THEN" functions:
-hello_world() { echo "Hello, World!"; }
-all_finished() { echo "That was easy!"; }
+hello_world () { echo "Hello, World!"; }
+all_finished () { echo "That was easy!"; }
 
 # Import Statebot
 cd "${0%/*}" || exit

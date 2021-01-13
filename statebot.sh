@@ -82,7 +82,7 @@ A basic implementation:
   }
 
   # Implement any "THEN" functions:
-  all_finished() { echo "That was easy!"; }
+  all_finished () { echo "That was easy!"; }
 
   # Import Statebot and initialise it
   cd "${0%/*}" || exit
