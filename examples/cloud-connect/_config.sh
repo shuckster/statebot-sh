@@ -2,7 +2,7 @@
 
 CC_PLUGIN_DEFAULT="bt-wifi"
 CC_WIRELESS_SSID_DEFAULT="BTWi-fi\|BTWifi-with-FON"
-CC_WIRELESS_IFACE_DEFAULT="" # apcli0 | wlan-sta
+CC_WIRELESS_IFACE_DEFAULT="wlan-sta" # apcli0 | wlan-sta
 CC_FAILURE_LIMIT_BEFORE_REBOOTING_DEFAULT="5"
 
 # Allow overriding of defaults
