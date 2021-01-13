@@ -33,7 +33,30 @@ CLOUD_CONNECT_CHART='
 
 '
 
-main()
+check_states_on_exit ()
+{
+  info "cloud-connect :: Exiting with state :: ${CURRENT_STATE}"
+
+  case "${CURRENT_STATE}" in
+    online)
+    ;;
+    offline)
+    ;;
+    rebooting)
+    ;;
+    *)
+      error "cloud-connect :: Unexpected exit-state, resetting machine..."
+      statebot_reset
+    ;;
+  esac
+}
+
+add_exit_trap ()
+{
+  trap "check_states_on_exit" EXIT
+}
+
+main ()
 {
   load_fail_count_for_this_session
 
@@ -54,7 +77,7 @@ main()
   fi
 }
 
-load_plugin()
+load_plugin ()
 {
   local PLUGIN_INFO PLUGIN_EXIT PLUGIN_NAME PLUGIN_PATH PLUGIN_API
 
@@ -114,6 +137,8 @@ load_plugin()
 
 check_connection ()
 {
+  add_exit_trap
+
   if is_logged_in
   then
     statebot_emit connected
@@ -125,6 +150,7 @@ check_connection ()
 attempt_login ()
 {
   warn "Not logged-in, trying..."
+
   if login
   then
     statebot_emit connected
@@ -216,8 +242,12 @@ perform_transitions ()
     *)
     # pause
     if case_statebot "$1" '
-      (idle|pinging|online|offline|logging-in|failure) ->
-        paused
+            idle |
+         pinging |
+          online |
+         offline |
+      logging-in |
+         failure -> paused
     '
     then
       ON="pause"
