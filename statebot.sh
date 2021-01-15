@@ -303,7 +303,7 @@ logit ()
   if [ "${STATEBOT_USE_LOGGER}" = "1" ]
   then
     msg=$(echo "${msg}"|sed 's/^-/=/')
-    logger -s -t "statebot" "${msg}"
+    logger -s -t "statebot(${STATEBOT_NAME:-'!'})" "${msg}"
   else
     echo "${msg}"
   fi
