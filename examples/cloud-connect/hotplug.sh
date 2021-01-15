@@ -37,13 +37,13 @@ on_ifup()
 }
 
 case "${ACTION}" in
-  disconnected)
+  'disconnected')
     on_ifdown
   ;;
-  ifdown)
+  'ifdown')
     on_ifdown
   ;;
-  ifup)
+  'ifup')
     on_ifup
   ;;
 esac

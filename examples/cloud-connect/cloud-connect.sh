@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2039
 
 CC_FAILURE_COUNT_FILE='/tmp/error_count.txt'
-CC_FAILURE_COUNT=0
+CC_FAILURE_COUNT="0"
 CC_FAILURE_LIMIT_BEFORE_REBOOT=${CC_FAILURE_LIMIT_BEFORE_REBOOT:-"20"}
 
 STATEBOT_LOG_LEVEL=${STATEBOT_LOG_LEVEL:-"4"}
@@ -38,14 +38,14 @@ check_states_on_exit ()
   info "cloud-connect :: Exiting with state :: ${CURRENT_STATE}"
 
   case "${CURRENT_STATE}" in
-    online)
+    'online')
     ;;
-    offline)
+    'offline')
     ;;
-    rebooting)
+    'rebooting')
     ;;
     *)
-      error "cloud-connect :: Unexpected exit-state, resetting machine..."
+      warn "cloud-connect :: Unexpected exit-state, resetting..."
       statebot_reset
     ;;
   esac
