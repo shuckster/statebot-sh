@@ -39,7 +39,47 @@ A basic implementation:
 
   "
 
-  # Implement a "perform_transitions" function to act on events:
+  main ()
+  {
+    statebot_init "demo" "idle" "start" "$PROMISE_CHART"
+    #   machine name -^     ^      ^           ^
+    #  1st-run state -------+      |           |
+    #  1st-run event --------------+           |
+    # statebot chart --------------------------+
+
+    echo  "Current state: $CURRENT_STATE"
+    echo "Previous state: $PREVIOUS_STATE"
+
+    if [ "$1" = "" ]
+    then
+      exit
+    fi
+
+    # Send events/reset signal from the command-line:
+    if [ "$1" = "reset" ]
+    then
+      statebot_reset
+    else
+      statebot_emit "$1"
+    fi
+  }
+
+  #
+  # Callbacks:
+  #
+  hello_world ()
+  {
+    echo "Hello, World!"
+    statebot_emit "okay" persist
+  }
+
+  all_finished () {
+    echo "Done and done!"
+  }
+
+  #
+  # Implement "perform_transitions" to act on events:
+  #
   perform_transitions ()
   {
     local ON THEN
@@ -49,7 +89,7 @@ A basic implementation:
     case $1 in
       "idle->pending")
         ON="start"
-        THEN="statebot_emit okay persist"
+        THEN="hello_world"
       ;;
       "pending->resolved")
         ON="okay"
@@ -57,52 +97,24 @@ A basic implementation:
       ;;
       "rejected->idle"|"resolved->idle")
         ON="done"
-      ;;
-    esac
-
-    echo $ON $THEN
-  }
-
-  # Implement an "on_transitions" function to act on transitions:
-  on_transitions ()
-  {
-    local THEN
-    THEN=""
-
-    case $1 in
-      "idle->pending")
-        THEN="echo Hello, World!"
-      ;;
-      "rejected->idle"|"resolved->idle")
         THEN="all_finished"
       ;;
     esac
 
-    echo $THEN
+    echo $ON "$THEN"
   }
 
-  # Implement any "THEN" functions:
-  all_finished () { echo "That was easy!"; }
-
-  # Import Statebot and initialise it
+  #
+  # Entry point
+  #
   cd "${0%/*}" || exit
-  # (^- this changes the working-dir to the script-dir)
+  # (^- change the working-directory to where this script is)
+
+  # Import Statebot
+  # shellcheck disable=SC1091
   . ./statebot.sh
 
-  statebot_init "demo" "idle" "start" "$PROMISE_CHART"
-
-  if [ "$1" = "" ]
-  then
-    exit
-  fi
-
-  # For this demo, allow emitting events from the command-line:
-  if [ "$1" = "reset" ]
-  then
-    statebot_reset
-  else
-    statebot_emit "$1"
-  fi
+  main "$1"
 
 # Copy all this to a script and run it a few times
 # to see what happens. :)
