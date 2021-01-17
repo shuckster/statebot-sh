@@ -102,7 +102,8 @@ hello_world ()
   statebot_emit "okay"
 }
 
-all_finished () {
+all_finished ()
+{
   echo "Done and done!"
 }
 

@@ -73,7 +73,8 @@ A basic implementation:
     statebot_emit "okay" persist
   }
 
-  all_finished () {
+  all_finished ()
+  {
     echo "Done and done!"
   }
 
