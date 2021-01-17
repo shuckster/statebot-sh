@@ -1,0 +1,20 @@
+#
+# If you want to hook-into Statebot-sh transitions without modifying
+# your Statebot-sh scripts, you can put an on_transitions() function
+# in a ~/.statebot-rc file and use STATEBOT_NAME to know which machine
+# is currently running.
+#
+# The example below takes this a step further and allows you to create
+# on_transitions() functions in separate files within your home folder,
+# which will be sourced by machine-name.
+#
+# So if you have a Statebot-sh script with a machine called "example",
+# create an on_transitions() function inside a file called
+# ~/_on_transitions_example and it will be sourced after the
+# `statebot_init` API method is called in your original script.
+#
+
+if [ -f "${HOME}/_on_transitions_${STATEBOT_NAME}" ]
+then
+  . "${HOME}/_on_transitions_${STATEBOT_NAME}"
+fi
