@@ -7,6 +7,7 @@ STATEBOT_LOG_LEVEL=4
 STATEBOT_USE_LOGGER=0
 # 1 to use the `logger` command instead of `echo`
 
+# Define the states and allowed transitions:
 PROMISE_CHART='
 
   idle ->
@@ -17,7 +18,47 @@ PROMISE_CHART='
 
 '
 
-# Implement a "perform_transitions" function to act on events:
+main ()
+{
+  statebot_init "demo" "idle" "start" "$PROMISE_CHART"
+  #   machine name -^     ^      ^           ^
+  #  1st-run state -------+      |           |
+  #  1st-run event --------------+           |
+  # statebot chart --------------------------+
+
+  echo  "Current state: $CURRENT_STATE"
+  echo "Previous state: $PREVIOUS_STATE"
+
+  if [ "$1" = "" ]
+  then
+    exit
+  fi
+
+  # Send events/reset signal from the command-line:
+  if [ "$1" = "reset" ]
+  then
+    statebot_reset
+  else
+    statebot_emit "$1"
+  fi
+}
+
+#
+# Callbacks:
+#
+hello_world ()
+{
+  echo "Hello, World!"
+  statebot_emit "okay"
+}
+
+all_finished () {
+  echo "Done and done!"
+}
+
+#
+# Implement "perform_transitions" to act on events:
+#
 perform_transitions ()
 {
   local ON THEN
@@ -27,7 +68,7 @@ perform_transitions ()
   case $1 in
     'idle->pending')
       ON="start"
-      THEN="statebot_emit okay persist"
+      THEN="hello_world"
     ;;
     'pending->resolved')
       ON="okay"
@@ -35,59 +76,21 @@ perform_transitions ()
     ;;
     'rejected->idle'|'resolved->idle')
       ON="done"
+      THEN="all_finished"
     ;;
   esac
 
   echo $ON "$THEN"
 }
 
-# Implement an "on_transitions" function to act on transitions:
-on_transitions ()
-{
-  local THEN
-  THEN=""
+#
+# Entry point
+#
+cd "${0%/*}" || exit
+# (^- change the directory to where this script is)
 
-  case $1 in
-    'idle->pending')
-      THEN="hello_world"
-    ;;
-    'rejected->idle'|'resolved->idle')
-      THEN="all_finished"
-    ;;
-  esac
-
-  echo $THEN
-}
-
-# Implement any "THEN" functions:
-hello_world () { echo "Hello, World!"; }
-all_finished () { echo "That was easy!"; }
-
-# Import Statebot
-cd "${0%/*}" || exit 255
-# (^- change the working-directory to where this script is)
-
+# Import Statebot-sh
+# shellcheck disable=SC1091
 . ../../statebot.sh
 
-statebot_init "demo" "idle" "start" "$PROMISE_CHART"
-#   machine name -^     ^      ^           ^
-#  1st-run state -------+      |           |
-#  1st-run event --------------+           |
-# statebot chart --------------------------+
-
-echo      "Current state: $CURRENT_STATE"
-echo     "Previous state: $PREVIOUS_STATE"
-echo "Last emitted event: $PREVIOUS_EVENT"
-
-if [ "$1" = "" ]
-then
-  exit
-fi
-
-# Allow resetting & emitting-events from the command-line:
-if [ "$1" = "reset" ]
-then
-  statebot_reset
-else
-  statebot_emit "$1"
-fi
+main "$1"
