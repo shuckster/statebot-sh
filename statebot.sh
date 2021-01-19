@@ -208,10 +208,26 @@ The Statebot-sh API:
     # Delete the record of a "statebot_name"
     # from the database.
 
-  # Details about the current machine:
   echo "     Current state: $CURRENT_STATE"
   echo "    Previous state: $PREVIOUS_STATE"
   echo "Last emitted event: $PREVIOUS_EVENT"
+    #
+    # Details about the current machine
+
+API in brief (scroll up for full):
+----------------------------------
+
+    statebot_delete "machine-name"
+    statebot_inspect "chart -> of -> states"
+    statebot_init "machine-name" "state" "event" "chart"
+    -
+    statebot_emit "event"
+    statebot_enter "state"
+    statebot_reset
+    statebot_states_available_from_here
+    -
+    statebot_current_state_of "machine-name"
+    statebot_persisted_event_of "machine-name"
 '
 
 #
