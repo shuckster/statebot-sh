@@ -429,6 +429,8 @@ I hope you find it useful!
 
 My main goal with this version is to make it as portable as possible! If you find an issue with it working in your particular version of `sh` or `bash`, please file a bug!
 
+If you feel it has saved you a little pain while trying to grok your own old projects, please consider [buying me a coffee](https://www.buymeacoffee.com/shuckster). :)
+
 ## Credits
 
 Statebot was inspired by a trawl through Wikipedia and Google, which in turn was inspired by [XState](https://github.com/davidkpiano/xstate) by David Khourshid. You should check it out.
