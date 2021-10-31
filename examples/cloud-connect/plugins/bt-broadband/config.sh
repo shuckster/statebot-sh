@@ -1,10 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2034
 
-# [ ! UNTESTED ! ]
+# Thanks to @adammcguk for testing and updating this config
 
 # Network
-BT_SSID=${CC_WIRELESS_SSID_MATCH:-"BTWi-fi"}
+BT_SSID=${CC_WIRELESS_SSID_MATCH:-"BTWi-fi\|BTWifi-with-FON"}
 BT_IFACE=${CC_WIRELESS_IFACE:-"wlan-sta"}
 BT_COOKIES="/tmp/bt_cookies.txt"
 BT_PREVIOUS_ATTEMPT="/tmp/bt_previous_attempt.html"
@@ -15,8 +15,10 @@ BT_STATUS_URL="https://www.btwifi.com:8443/home"
 BT_LOGIN_URL="https://www.btwifi.com:8443/tbbLogon"
 BT_LOGIN_FORM="\
   xhtmlLogon=https://www.btwifi.com:8443/tbbLogon&\
-  USERNAME=${__USERNAME__}&\
-  PASSWORD=${__PASSWORD__}&\
+  submitButton=Login&\
+  inputUsername=${__USERNAME__}&\
+  username=${__USERNAME__}&\
+  password=${__PASSWORD__}&\
   provider=tbb"
 
 # Remove indentation from the form above
