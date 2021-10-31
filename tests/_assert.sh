@@ -1,5 +1,5 @@
 #!/bin/sh
-# shellcheck disable=SC2034,SC2039,SC2059
+# shellcheck disable=SC2034,SC2039,SC2059,SC3043
 
 if [ "${DISABLE_COLOUR}" != "true" ]
 then
@@ -47,6 +47,7 @@ assert_ne()
 assert_list_eq ()
 {
   local source_list test_list description
+
   source_list=$(echo "$1"|sort)
   test_list=$(echo "$2"|sort)
   description="$3"
