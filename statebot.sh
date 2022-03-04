@@ -32,7 +32,6 @@ A basic implementation:
   #
   # Define the states and allowed transitions:
   #
-
   PROMISE_CHART="
 
     idle ->
@@ -42,11 +41,9 @@ A basic implementation:
       idle
 
   "
-
   #
   # Implement "perform_transitions" to act on events:
   #
-
   perform_transitions ()
   {
     local ON THEN
@@ -74,7 +71,6 @@ A basic implementation:
   #
   # THEN callbacks:
   #
-
   hello_world ()
   {
     echo "Hello, World!"
@@ -89,7 +85,6 @@ A basic implementation:
   #
   # Entry point
   #
-
   main ()
   {
     statebot_init "demo" "idle" "start" "$PROMISE_CHART"

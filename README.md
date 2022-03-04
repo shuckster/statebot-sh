@@ -60,7 +60,6 @@ STATEBOT_USE_LOGGER=0
 #
 # Define the states and allowed transitions:
 #
-
 PROMISE_CHART='
 
   idle ->
@@ -70,11 +69,9 @@ PROMISE_CHART='
     idle
 
 '
-
 #
 # Implement "perform_transitions" to act on events:
 #
-
 perform_transitions ()
 {
   local ON THEN
@@ -119,7 +116,6 @@ perform_transitions ()
 #
 # THEN callbacks:
 #
-
 hello_world ()
 {
   echo "Hello, World!"
@@ -134,7 +130,6 @@ all_finished ()
 #
 # Entry point
 #
-
 main ()
 {
   statebot_init "demo" "idle" "start" "$PROMISE_CHART"
