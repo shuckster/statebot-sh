@@ -57,7 +57,10 @@ STATEBOT_LOG_LEVEL=4
 STATEBOT_USE_LOGGER=0
 # 1 to use the `logger` command instead of `echo`
 
+#
 # Define the states and allowed transitions:
+#
+
 PROMISE_CHART='
 
   idle ->
@@ -67,6 +70,70 @@ PROMISE_CHART='
     idle
 
 '
+
+#
+# Implement "perform_transitions" to act on events:
+#
+
+perform_transitions ()
+{
+  local ON THEN
+  ON=""
+  THEN=""
+
+  case $1 in
+    'idle->pending')
+      ON="start"
+      THEN="hello_world"
+    ;;
+    'pending->resolved')
+      ON="okay"
+      THEN="statebot_emit done"
+    ;;
+    'rejected->idle'|'resolved->idle')
+      ON="done"
+      THEN="all_finished"
+    ;;
+  esac
+
+  echo $ON "$THEN"
+
+  # The job of this function is to "echo" the event-
+  # name that will cause the transition to happen.
+  #
+  # Optionally, it can also "echo" a command to run
+  # after the transition happens.
+  #
+  # Following the convention set in the JS version
+  # of Statebot, this is called a "THEN" command.
+  # It can be anything you like, including a Statebot
+  # API call.
+  #
+  # It's important to just echo the name of an event
+  # (and optional command, too) rather than execute
+  # something directly! Anything that is echo'ed by
+  # this function that is not an event or command-
+  # name might result in some wild behaviour.
+}
+
+#
+# THEN callbacks:
+#
+
+hello_world ()
+{
+  echo "Hello, World!"
+  statebot_emit "okay"
+}
+
+all_finished ()
+{
+  echo "Done and done!"
+}
+
+#
+# Entry point
+#
 
 main ()
 {
@@ -93,66 +160,6 @@ main ()
   fi
 }
 
-#
-# Callbacks:
-#
-hello_world ()
-{
-  echo "Hello, World!"
-  statebot_emit "okay"
-}
-
-all_finished ()
-{
-  echo "Done and done!"
-}
-
-#
-# Implement "perform_transitions" to act on events:
-#
-perform_transitions ()
-{
-  local ON THEN
-  ON=""
-  THEN=""
-
-  case $1 in
-    'idle->pending')
-      ON="start"
-      THEN="hello_world"
-    ;;
-    'pending->resolved')
-      ON="okay"
-      THEN="statebot_emit done"
-    ;;
-    'rejected->idle'|'resolved->idle')
-      ON="done"
-      THEN="all_finished"
-    ;;
-  esac
-
-  echo $ON "$THEN"
-  # The job of this function is to "echo" the event-
-  # name that will cause the transition to happen.
-  #
-  # Optionally, it can also "echo" a command to run
-  # after the transition happens.
-  #
-  # Following the convention set in the JS version
-  # of Statebot, this is called a "THEN" command.
-  # It can be anything you like, including a Statebot
-  # API call.
-  #
-  # It's important to just echo the name of an event
-  # (and optional command, too) rather than execute
-  # something directly! Anything that is echo'ed by
-  # this function that is not an event or command-
-  # name might result in some wild behaviour.
-}
-
-#
-# Entry point
-#
 cd "${0%/*}" || exit
 # (^- change the directory to where this script is)
 
@@ -297,6 +304,7 @@ perform_transitions ()
   esac
 
   echo $ON $THEN
+
   # The job of this function is to "echo" the event-
   # name that will cause the transition to happen.
   #
@@ -337,6 +345,7 @@ on_transitions ()
   esac
 
   echo $THEN
+
   # The job of this function is to "echo" the name of
   # a command you want to run.
   #

@@ -29,6 +29,10 @@ A basic implementation:
   STATEBOT_USE_LOGGER=0
   # 1 to use the `logger` command instead of `echo`
 
+  #
+  # Define the states and allowed transitions:
+  #
+
   PROMISE_CHART="
 
     idle ->
@@ -38,6 +42,53 @@ A basic implementation:
       idle
 
   "
+
+  #
+  # Implement "perform_transitions" to act on events:
+  #
+
+  perform_transitions ()
+  {
+    local ON THEN
+    ON=""
+    THEN=""
+
+    case $1 in
+      "idle->pending")
+        ON="start"
+        THEN="hello_world"
+      ;;
+      "pending->resolved")
+        ON="okay"
+        THEN="statebot_emit done"
+      ;;
+      "rejected->idle"|"resolved->idle")
+        ON="done"
+        THEN="all_finished"
+      ;;
+    esac
+
+    echo $ON "$THEN"
+  }
+
+  #
+  # THEN callbacks:
+  #
+
+  hello_world ()
+  {
+    echo "Hello, World!"
+    statebot_emit "okay" persist
+  }
+
+  all_finished ()
+  {
+    echo "Done and done!"
+  }
+
+  #
+  # Entry point
+  #
 
   main ()
   {
@@ -64,50 +115,6 @@ A basic implementation:
     fi
   }
 
-  #
-  # Callbacks:
-  #
-  hello_world ()
-  {
-    echo "Hello, World!"
-    statebot_emit "okay" persist
-  }
-
-  all_finished ()
-  {
-    echo "Done and done!"
-  }
-
-  #
-  # Implement "perform_transitions" to act on events:
-  #
-  perform_transitions ()
-  {
-    local ON THEN
-    ON=""
-    THEN=""
-
-    case $1 in
-      "idle->pending")
-        ON="start"
-        THEN="hello_world"
-      ;;
-      "pending->resolved")
-        ON="okay"
-        THEN="statebot_emit done"
-      ;;
-      "rejected->idle"|"resolved->idle")
-        ON="done"
-        THEN="all_finished"
-      ;;
-    esac
-
-    echo $ON "$THEN"
-  }
-
-  #
-  # Entry point
-  #
   cd "${0%/*}" || exit
   # (^- change the working-directory to where this script is)
 
