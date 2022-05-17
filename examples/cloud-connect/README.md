@@ -184,6 +184,31 @@ report_online_status ()
 
 Have a look in `plugins/` to see this example and another that works for BT Wifi, too.
 
+## VPN issues
+
+Problems with the script while connected to VPN?
+
+Thanks to @transilluminate for [offering the following solution](https://gist.github.com/sscarduzio/05ed0b41d6234530d724?permalink_comment_id=4169528#gistcomment-4169528):
+
+> I ran into an issue: if I enabled the VPN, the script would think I'm offline, and wouldn't connect... this was because the resolved IP address for [www.btwifi.com](http://www.btwifi.com) changed with the VPN active! I solved it by having a static entry in /etc/hosts. Not the most elegant solution, as if BT changes the IP address in the future - it'll break - but I think the chances of that are quite low...
+> 
+> ```
+> root@GL-MT300N-V2:/opt/statebot/examples/cloud-connect# cat /etc/hosts
+> 127.0.0.1 localhost
+> 192.168.23.21 www.btwifi.com
+> 
+> ::1     localhost ip6-localhost ip6-loopback
+> ff02::1 ip6-allnodes
+> ff02::2 ip6-allrouters
+> ```
+> 
+> Hope that helps people... can anyone offer a better / more elegant solution?!
+> 
+> Edit:
+> 
+> Using a [VPN policy](https://docs.gl-inet.com/en/3/tutorials/vpn_policies/) seems to be better: I added the IP block 192.168.0.0/16 to the list to _not_ use the VPN, works now without the entry in `/etc/hosts`.
+
+
 ## Credit
 
 Props to [sscarduzio and other commenters in his Gist](https://gist.github.com/sscarduzio/05ed0b41d6234530d724) for starting me down this rabbit-hole, and [SpikeTheLobster](https://gist.github.com/sscarduzio/05ed0b41d6234530d724#gistcomment-3336485) for the BT OpenZone config settings.
