@@ -17,7 +17,7 @@ Statebot-sh is a minimal but useful shell port of the version that runs in [Node
 - [Credits](#credits)
 - [License](#license)
 
-Documentation is in this README, and examples can be found in `/examples`. It's not required reading, but the original JavaScript version has [extensive documentation](https://shuckster.github.io/statebot/) that may be helpful with getting-to-grips with this port. In particular, familiarity with the [chart syntax](https://shuckster.github.io/statebot/#statebotchart) would be helpful to know (it's not very complicated.)
+Documentation is in this README, and examples can be found in `/examples`. It's not required reading, but the original JavaScript version has [extensive documentation](https://shuckster.github.io/statebot/) that may be helpful with getting-to-grips with this port. In particular, familiarity with the [chart syntax](https://zansh.in/statebot/types/index.TStatebotChart.html) would be helpful to know (it's not very complicated.)
 
 # Quick Start
 
