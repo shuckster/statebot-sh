@@ -439,7 +439,7 @@ If you feel it has saved you a little pain while trying to grok your own old pro
 
 Statebot was inspired by a trawl through Wikipedia and Google, which in turn was inspired by [XState](https://github.com/davidkpiano/xstate) by David Khourshid. You should check it out.
 
-The Statebot logo uses the "You're Gone" font from [Typodermic Fonts](https://typodermicfonts.com/youre-gone/). The logo was made with [Acorn](https://flyingmeat.com/acorn/). The JS documentation is written in [JSDoc](https://jsdoc.app/) and is built with [documentation.js](http://documentation.js.org/).
+The Statebot logo uses the "You're Gone" font from [Typodermic Fonts](https://typodermicfonts.com/youre-gone/). The logo was made with [Acorn](https://flyingmeat.com/acorn/). The JS documentation is written in [JSDoc](https://jsdoc.app/) and is built with [Typedoc](https://typedoc.org/).
 
 Statebot-sh was written by [Conan Theobald](https://github.com/shuckster/).
 
