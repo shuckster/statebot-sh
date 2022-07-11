@@ -2,11 +2,9 @@
 
 <img src="./sh-logo-full.png" width="300" />
 
-Write more robust and understandable programs.
+Statebot for shell-scripts. Describe the states and allowed transitions of a program using a flowchart-like syntax.
 
-Statebot hopes to make [Finite State Machines](https://en.wikipedia.org/wiki/Finite-state_machine) (FSMs) a little more accessible by focussing on their organisational benefits in a simplified way.
-
-Statebot-sh is a minimal but useful shell port of the version that runs in [Node and the browser](https://shuckster.github.io/statebot/). It employs a simple caching mechanism with `/tmp/statebots.csv` in order to persist the states of your machines across runs, and optionally the events too.
+Statebot-sh is an [FSM](https://en.wikipedia.org/wiki/Finite-state_machine) - a minimal, but useful shell port of the version that runs in [Node and the browser](https://shuckster.github.io/statebot/). It employs a simple caching mechanism with `/tmp/statebots.csv` in order to persist the states of your machines across runs, and optionally the events too.
 
 - [Quick Start](#quick-start)
   - [A small example](#a-small-example)
