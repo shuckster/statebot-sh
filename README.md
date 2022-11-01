@@ -1,6 +1,4 @@
-# Statebot-sh
-
-<img src="./sh-logo-full.png" width="300" />
+<img alt="Statebot-sh" src="./sh-logo-full.png" width="300" />
 
 Statebot for shell-scripts. Describe the states and allowed transitions of a program using a flowchart-like syntax.
 
